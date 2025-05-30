@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = process.env.VITE_API_URL || "";
 
 interface Store {
   _id: string;
