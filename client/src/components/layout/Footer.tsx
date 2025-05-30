@@ -74,7 +74,7 @@ export default function Footer() {
                 <li><Link href="/collections/men" className="text-white/70 hover:text-white text-sm">Men</Link></li>
                 <li><Link href="/collections/bestsellers" className="text-white/70 hover:text-white text-sm">Best Sellers</Link></li>
                 <li><Link href="/collections/gifting" className="text-white/70 hover:text-white text-sm">Gifting</Link></li>
-                <li><Link href="#" className="text-white/70 hover:text-white text-sm">E-Gift Card</Link></li>
+                <li><Link href="/giftcards/" className="text-white/70 hover:text-white text-sm">E-Gift Card</Link></li>
               </ul>
             </div>
             
@@ -99,9 +99,9 @@ export default function Footer() {
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">Ingredients</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">Loyalty Program</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">Kama Experiences</Link></li>
-                <li><Link href="#" className="text-white/70 hover:text-white text-sm">Store Locator</Link></li>
+                <li><Link href="/storelocator/" className="text-white/70 hover:text-white text-sm">Store Locator</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">Promotions</Link></li>
-                <li><Link href="#" className="text-white/70 hover:text-white text-sm">Blog</Link></li>
+                <li><Link href="/blogs/" className="text-white/70 hover:text-white text-sm">Blog</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">N42 Helpline</Link></li>
               </ul>
             </div>
@@ -112,7 +112,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 <li><Link href="/account" className="text-white/70 hover:text-white text-sm">My Profile</Link></li>
                 <li><Link href="/account" className="text-white/70 hover:text-white text-sm">My Orders</Link></li>
-                <li><Link href="#" className="text-white/70 hover:text-white text-sm">Track My Order</Link></li>
+                <li><Link href="/track-order/" className="text-white/70 hover:text-white text-sm">Track My Order</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">Delivery & Returns</Link></li>
               </ul>
               

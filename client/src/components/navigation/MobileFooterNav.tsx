@@ -128,11 +128,11 @@ const MobileFooterNav: React.FC = () => {
           <NavLabel>Account</NavLabel>
         </NavItem>
       </Link>
-      <Link href="/downloads">
-        <NavItem $active={isActive('/downloads')}>
-          {isActive('/downloads') && <ActiveIndicator />}
+      <Link href="/blogs">
+        <NavItem $active={isActive('/blogs')}>
+          {isActive('/blogs') && <ActiveIndicator />}
           <Download />
-          <NavLabel>Downloads</NavLabel>
+          <NavLabel>Blogs</NavLabel>
         </NavItem>
       </Link>
     </FooterNav>
