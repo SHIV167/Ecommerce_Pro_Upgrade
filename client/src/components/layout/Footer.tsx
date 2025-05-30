@@ -82,7 +82,7 @@ export default function Footer() {
             <div>
               <h3 className="text-lg font-medium mb-4">CUSTOMER CARE</h3>
               <ul className="space-y-2">
-                <li><Link href="#" className="text-white/70 hover:text-white text-sm">Contact Us</Link></li>
+                <li><Link href="/contact/" className="text-white/70 hover:text-white text-sm">Contact Us</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">News & Media</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">Delivery and Returns</Link></li>
                 <li><Link href="#" className="text-white/70 hover:text-white text-sm">FAQs</Link></li>
