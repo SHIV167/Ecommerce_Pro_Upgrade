@@ -20,6 +20,7 @@ RUN npm ci
 
 # Copy all source
 COPY . .
+RUN npm run build
 
 # Expose server port
 EXPOSE 5000
