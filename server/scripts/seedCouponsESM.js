@@ -117,8 +117,7 @@ const sampleCoupons = [
 // Connect to MongoDB
 const MONGODB_URI =
   process.env.MONGODB_URL ||
-  process.env.MONGODB_URI ||
-  "mongodb+srv://admin:Sshiv12345@cluster0.4fs9ylv.mongodb.net/newecom";
+  process.env.MONGODB_URI 
 
 try {
   await mongoose.connect(MONGODB_URI);

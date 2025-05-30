@@ -111,6 +111,8 @@ export function serveStatic(app: Express) {
     );
   }
   app.use(express.static(clientDist));
+  const uploadsDir = path.resolve(__dirname, '../uploads');
+  app.use('/uploads', express.static(uploadsDir));
   // Fallback for client UI, skip API and admin
   app.use((req, res, next) => {
     if (req.originalUrl.startsWith('/admin') || req.originalUrl.startsWith('/api')) return next();
