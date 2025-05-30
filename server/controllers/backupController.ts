@@ -1,10 +1,10 @@
-import { exec } from 'child_process';
 import { fileURLToPath } from 'url';
 import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { Request, Response } from 'express';
 import fs from 'fs';
+import { exec } from 'child_process';
 import SettingModel from '../models/Setting';
 import { sendMail } from '../utils/mailer';
 
@@ -17,7 +17,7 @@ export async function backupDatabase(req: Request, res: Response) {
     }
 
     // Ensure backup directory exists
-    const backupDir = path.resolve(__dirname, '../public/uploads/BACKUP');
+    const backupDir = path.resolve(__dirname, '../../uploads/BACKUP');
     if (!fs.existsSync(backupDir)) {
       fs.mkdirSync(backupDir, { recursive: true });
     }
