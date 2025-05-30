@@ -16,7 +16,7 @@ WORKDIR /app
 
 # Copy package files and install dependencies (including dev for tsx)
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 # Copy all source
 COPY . .
