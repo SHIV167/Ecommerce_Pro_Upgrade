@@ -1,0 +1,78 @@
+.blog-slider-container {
+  position: relative;
+  padding: 0 40px;
+}
+
+.blog-slider-container .slick-prev,
+.blog-slider-container .slick-next {
+  width: 40px;
+  height: 40px;
+  background: rgb(0, 0, 0);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  z-index: 1;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.blog-slider-container .slick-prev {
+  left: -5px;
+}
+
+.blog-slider-container .slick-next {
+  right: -5px;
+}
+
+.blog-slider-container .slick-prev:hover,
+.blog-slider-container .slick-next:hover {
+  background: #000;
+  color: white;
+}
+
+.blog-slider-container .slick-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Blog card styles */
+.blog-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+}
+
+.blog-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.blog-card h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 1rem 0 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.blog-card p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Center items when there are fewer slides than slidesToShow */
+.blog-slider-container .slick-track {
+  margin-left: auto;
+  margin-right: auto;
+}

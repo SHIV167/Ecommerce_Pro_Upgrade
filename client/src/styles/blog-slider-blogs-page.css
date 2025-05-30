@@ -1,0 +1,74 @@
+/* Additional styles specific to the blogs page slider */
+.blogs-page .blog-slider {
+  margin-bottom: 60px !important; /* Extra space for pagination dots */
+}
+
+/* Force block display for slick slides */
+.blogs-page .slick-slide {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Enhanced arrow styling */
+.blogs-page .blog-slider .slick-prev,
+.blogs-page .blog-slider .slick-next {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 50%;
+  z-index: 1000; /* Very high z-index to ensure visibility */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.blogs-page .blog-slider .slick-prev {
+  left: 10px;
+}
+
+.blogs-page .blog-slider .slick-next {
+  right: 10px;
+}
+
+/* Improve slide appearance */
+.blogs-page .blog-slider .slick-slide {
+  padding: 0 15px;
+}
+
+/* Fix for Chrome and Safari */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .blogs-page .blog-slider .slick-track {
+    display: flex !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+  
+  .blogs-page .slick-list {
+    overflow: visible !important;
+  }
+}
+
+/* Fix for Firefox */
+@-moz-document url-prefix() {
+  .blogs-page .blog-slider .slick-track {
+    transform: translateZ(0) !important;
+  }
+}
+
+/* Ensure content is visible */
+.blogs-page .blog-slider .slick-list {
+  overflow: visible !important;
+}
+
+/* Force slider to be active */
+.blogs-page .blog-slider.slick-initialized {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Fix for IE11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .blogs-page .blog-slider .slick-track {
+    display: block !important;
+  }
+}

@@ -1,0 +1,365 @@
+/* Blog Post Page Styling */
+body.blog-post-page {
+  /* Use fullbg_Desktop.png as background */
+  background-color: #f8f8f8;
+  background-image: url('/uploads/fullbg_Desktop.webp');
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #333;
+  position: relative;
+}
+
+/* Add overlay to create depth with slight transparency for readability */
+body.blog-post-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.7) 100%);
+  z-index: -1;
+}
+
+.blog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  overflow-x: hidden;
+}
+
+@media (min-width: 640px) {
+  .blog-container {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .blog-container {
+    padding: 2rem;
+  }
+}
+
+.blog-header {
+  margin-bottom: 2rem;
+}
+
+.blog-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  color: #1a3c40;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 640px) {
+  .blog-title {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .blog-title {
+    font-size: 2.5rem;
+  }
+}
+
+.blog-meta {
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.blog-author {
+  margin-right: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .blog-author {
+    margin-bottom: 0;
+  }
+}
+
+.blog-date {
+  display: flex;
+  align-items: center;
+}
+
+.blog-date-divider {
+  margin: 0 0.5rem;
+}
+
+.blog-reading-time {
+  margin-left: 1.5rem;
+}
+
+.blog-content {
+  font-size: 1.7rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .blog-content {
+    font-size: 1.125rem;
+  }
+}
+
+.blog-content p {
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.blog-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+  color: #1a3c40;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .blog-content h2 {
+    font-size: 1.75rem;
+    margin: 2rem 0 1rem;
+  }
+}
+
+.blog-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.25rem 0 1rem;
+  color: #1a3c40;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .blog-content h3 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem;
+  }
+}
+
+/* Share Controls */
+.blog-share {
+  margin: 1.5rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+@media (min-width: 768px) {
+  .blog-share {
+    margin: 2rem 0;
+  }
+}
+
+.blog-share-label {
+  margin-right: 1rem;
+  font-weight: 500;
+}
+
+.blog-share-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.blog-share-buttons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.blog-share-buttons button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Highlights Section */
+.blog-highlights {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.blog-highlights-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: #1a3c40;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.blog-highlights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blog-highlights-item {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.blog-highlights-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #1a3c40;
+  font-weight: bold;
+}
+
+.blog-highlights-link {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.blog-highlights-link:hover {
+  color: #1a3c40;
+}
+
+/* Author Section */
+.blog-author-section {
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 1.25rem 0;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .blog-author-section {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+}
+
+.blog-author-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 1.25rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .blog-author-avatar {
+    width: 80px;
+    height: 80px;
+    margin-right: 1.5rem;
+  }
+}
+
+.blog-author-info h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.blog-author-bio {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* Related Posts Section */
+.blog-related-posts {
+  margin-top: 3rem;
+}
+
+.blog-related-posts-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1a3c40;
+}
+
+.blog-related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .blog-related-posts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* Additional Responsive styles */
+@media (max-width: 480px) {
+  .blog-title {
+    font-size: 1.5rem;
+  }
+  
+  .blog-container {
+    padding: 0.75rem;
+  }
+  
+  .blog-content {
+    font-size: 1.1rem;
+  }
+  
+  .blog-highlights {
+    padding: 1rem;
+  }
+  
+  .blog-highlights-title {
+    font-size: 1.1rem;
+  }
+  
+  .blog-highlights-link {
+    font-size: 0.9rem;
+  }
+  
+  .blog-highlights-item {
+    margin-bottom: 0.75rem;
+    padding-left: 1.25rem;
+  }
+}
+
+/* Fix for code blocks and pre elements that might overflow */
+.blog-content pre,
+.blog-content code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* Fix for tables that might overflow */
+.blog-content table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}

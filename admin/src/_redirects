@@ -1,0 +1,7 @@
+# SPA fallback
+/* /index.html 200
+
+# API proxy redirects
+/api/* https://ecommercepromern.onrender.com/api/:splat 200
+/admin/* https://ecommercepromern.onrender.com/admin/:splat 200
+/uploads/* https://ecommercepromern.onrender.com/uploads/:splat 200

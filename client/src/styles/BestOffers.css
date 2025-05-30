@@ -1,0 +1,189 @@
+.best-offers {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.best-offers-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #000;
+  text-align: center;
+}
+
+.offers-wrapper {
+  position: relative;
+  padding: 0 40px;
+  background: #fdf1f1;
+}
+
+.offers-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: hidden;
+  padding: 0.75rem 0;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  width: 100%;
+}
+
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.nav-button.prev {
+  left: 0;
+}
+
+.nav-button.next {
+  right: 0;
+}
+
+.nav-button svg {
+  width: 24px;
+  height: 24px;
+  color: #2c2c2c;
+}
+
+.offers-container::-webkit-scrollbar {
+  display: none;
+}
+
+.offer-card {
+  flex: 0 0 260px;
+  position: relative;
+  scroll-snap-align: start;
+  padding: 8px;
+  background: #fff;
+  min-width: 260px;
+}
+
+.offer-content {
+  display: flex;
+  height: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.offer-text {
+  flex: 1;
+  padding: 1rem;
+  background: #2c2c2c;
+  color: #ff9898;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px 0 0 12px;
+}
+
+/* Circular cutouts for offer-text */
+.offer-text::before,
+.offer-text::after,
+.offer-text .corner-top-left,
+.offer-text .corner-bottom-left {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: #fdf1f1;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.offer-text::before {
+  top: -12px;
+  right: -12px;
+}
+
+.offer-text::after {
+  bottom: -12px;
+  right: -12px;
+}
+
+.offer-text .corner-top-left {
+  top: -12px;
+  left: -12px;
+}
+
+.offer-text .corner-bottom-left {
+  bottom: -12px;
+  left: -12px;
+}
+
+.offer-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1.1;
+  margin: 0;
+  color: #ff9898;
+}
+
+.offer-description {
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+  opacity: 0.9;
+}
+
+.code-label {
+  font-size: 0.875rem;
+  margin-top: auto;
+}
+
+.code-label span {
+  font-weight: bold;
+  color: #fff;
+}
+
+.code-section {
+  width: 50px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 2px solid #2c2c2c;
+  border-left: 2px dashed #2c2c2c;
+  margin-left: -2px;
+  border-radius: 0 12px 12px 0;
+}
+
+.copy-code-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  color: #2c2c2c;
+}
+
+.copy-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #2c2c2c;
+  transition: color 0.2s;
+}
+
+.copy-button:hover {
+  color: #ff9898;
+}

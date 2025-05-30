@@ -1,0 +1,68 @@
+/* Blog Banner Slider Styles */
+.blog-banner-slider {
+  width: 100%;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.blog-banner-slider img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Make sure mobile images are appropriate size */
+@media (max-width: 767px) {
+  .blog-banner-slider img {
+    height: 300px;
+  }
+}
+
+/* Add space between banner and content */
+.blog-listing-header {
+  margin-top: 30px;
+}
+
+/* Add overlay text styling */
+.banner-overlay-text {
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+  right: 50px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  max-width: 500px;
+}
+
+.banner-overlay-text h2 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  font-family: serif;
+  color: #333;
+}
+
+.banner-overlay-text p {
+  font-size: 16px;
+  color: #666;
+  font-family: sans-serif;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .banner-overlay-text {
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    padding: 15px;
+  }
+  
+  .banner-overlay-text h2 {
+    font-size: 20px;
+  }
+  
+  .banner-overlay-text p {
+    font-size: 14px;
+  }
+}
