@@ -164,6 +164,16 @@ export async function registerRoutes(app: Application): Promise<Server> {
   app.get('/api/orders/:id', getOrderById);
   app.post('/api/orders', createOrder);
   app.put('/api/orders/:id', updateOrder);
+  // Track shipment via Shiprocket
+  app.get('/api/orders/:id/track', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const data = await trackShipment(id);
+      return res.json({ data });
+    } catch (error) {
+      return next(error);
+    }
+  });
   // Razorpay payment endpoints
   app.post('/api/razorpay/order', createRazorpayOrder);
   app.post('/api/razorpay/verify', verifyRazorpayPayment);

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { jsPDF } from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -46,8 +46,8 @@ export default function OrderDetailsPage() {
       `₹${item.productPrice}`,
       `₹${item.productPrice * item.quantity}`,
     ]);
-    // @ts-ignore
-    doc.autoTable({ head: [cols], body: rows, startY: 40 });
+    // Generate table via autoTable plugin
+    autoTable(doc, { head: [cols], body: rows, startY: 40 });
     doc.save(`invoice_${order.id}.pdf`);
   };
 
