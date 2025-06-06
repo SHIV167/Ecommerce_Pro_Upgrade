@@ -32,7 +32,8 @@ import { getGiftPopupConfig, updateGiftPopupConfig, getGiftProducts } from "./co
 import { getPopupSetting, updatePopupSetting } from './controllers/popupSettingController';
 import { backupDatabase } from "./controllers/backupController";
 import { getAllUsers, updateUser, deleteUser } from './controllers/userController';
-import { getOrders, updateOrder } from './controllers/orderController';
+import { getOrders, updateOrder, createOrder } from './controllers/orderController';
+import { createRazorpayOrder } from './controllers/razorpayController';
 import fs from "fs";
 import path, { dirname } from "path";
 import multer from "multer";
@@ -160,6 +161,7 @@ export async function registerRoutes(app: Application): Promise<Server> {
   app.use('/api', featuredProductRoutes); // Add optimized featured product routes
   // Order routes
   app.get('/api/orders', getOrders);
+  app.post('/api/orders', createOrder);
   app.put('/api/orders/:id', updateOrder);
   app.use('/api', categoryRoutes);
   // User management routes
@@ -1190,6 +1192,9 @@ export async function registerRoutes(app: Application): Promise<Server> {
       return res.status(500).json({ error: "Failed to fetch product collections" });
     }
   });
+
+  // Razorpay order creation endpoint
+  app.post('/api/razorpay/order', createRazorpayOrder);
 
   // Create and return HTTP server
   return createServer(app);

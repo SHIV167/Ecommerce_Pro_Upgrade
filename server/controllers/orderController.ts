@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import OrderModel from '../models/Order';
+import OrderItemModel from '../models/OrderItem';
 
 export async function getOrders(req: Request, res: Response) {
   try {
@@ -63,5 +64,26 @@ export async function updateOrder(req: Request, res: Response) {
   } catch (error) {
     console.error('Error updating order:', error);
     res.status(500).json({ message: 'Error updating order' });
+  }
+}
+
+// Create a new order with items
+export async function createOrder(req: Request, res: Response) {
+  try {
+    const { order, items } = req.body;
+    const createdOrder = await OrderModel.create(order);
+    // Use Mongoose Document.id (string) to avoid unknown _id type
+    const orderId = createdOrder.id;
+    // Insert order items
+    await Promise.all(items.map((item: any) => OrderItemModel.create({
+      orderId,
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.price,
+    })));
+    return res.json({ order: { id: orderId }, items });
+  } catch (error: any) {
+    console.error('Error creating order:', error);
+    return res.status(500).json({ message: 'Error creating order', error: error.message });
   }
 }
