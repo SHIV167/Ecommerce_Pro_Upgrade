@@ -100,6 +100,10 @@ export async function updateOrder(req: Request, res: Response) {
 export async function createOrder(req: Request, res: Response) {
   try {
     const { order, items } = req.body;
+    // If payment is prepaid, initialize status to processing
+    if (order.paymentMethod !== 'cod') {
+      order.status = 'processing';
+    }
     const createdOrder = await OrderModel.create(order);
     // Use Mongoose Document.id (string) to avoid unknown _id type
     const orderId = createdOrder.id;
