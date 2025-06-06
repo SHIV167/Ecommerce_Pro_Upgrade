@@ -37,7 +37,11 @@ export default function AccountPage() {
         'GET',
         `/api/orders?userId=${normalizedUserId}&page=${page}&limit=${limit}`
       );
-      return res.json();
+      const json = await res.json();
+      if (Array.isArray(json)) {
+        return { orders: json, total: json.length };
+      }
+      return json;
     },
     enabled: !!normalizedUserId,
     refetchInterval: 10000,

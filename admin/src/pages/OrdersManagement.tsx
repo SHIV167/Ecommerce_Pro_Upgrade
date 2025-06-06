@@ -4,17 +4,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 // Define Order interface since @shared/schema module is missing
 interface Order {
   _id: string;
-  id?: string;
+  id: string;
   userId: string;
-  items: Array<{
-    productId: string;
-    quantity: number;
-    price: number;
-    name: string;
-    imageUrl?: string;
-  }>;
-  totalAmount: number;
-  paymentMethod: string; // Added missing paymentMethod property
+  status: string;
+  paymentMethod: string;
+  paymentStatus: string;
+  shippingCost: number;
   shippingAddress: {
     fullName: string;
     addressLine1: string;
@@ -24,7 +19,24 @@ interface Order {
     postalCode: string;
     country: string;
   };
-  status: string;
+  billingAddress: {
+    fullName: string;
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+  items: Array<{
+    id: string;
+    productId: string;
+    quantity: number;
+    productName: string;
+    productPrice: number;
+    productImage?: string;
+  }>;
+  totalAmount: number;
   packageLength?: number;
   packageBreadth?: number;
   packageHeight?: number;
@@ -32,6 +44,7 @@ interface Order {
   createdAt: string;
   updatedAt: string;
 };
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -76,6 +89,9 @@ export default function OrdersManagement() {
   const [packageHeight, setPackageHeight] = useState<string>("");
   const [packageWeight, setPackageWeight] = useState<string>("");
 
+  // Full order details fetched on demand
+  const [orderDetail, setOrderDetail] = useState<any>(null);
+
   const limit = 10;
 
   const apiBase = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL ?? '');
@@ -110,13 +126,22 @@ export default function OrdersManagement() {
     setPage(1); // Reset page when searching
   };
 
-  const handleViewOrder = (order: Order) => {
-    setPackageLength(order.packageLength?.toString() || "");
-    setPackageBreadth(order.packageBreadth?.toString() || "");
-    setPackageHeight(order.packageHeight?.toString() || "");
-    setPackageWeight(order.packageWeight?.toString() || "");
-    setSelectedOrder(order);
-    setIsOrderDetailsOpen(true);
+  const handleViewOrder = async (order: Order) => {
+    try {
+      const res = await fetch(`${apiBase}/api/orders/${order.id}`);
+      if (!res.ok) throw new Error("Failed to fetch order details");
+      const data = await res.json();
+      const full = data.order;
+      setPackageLength(full.packageLength?.toString() || "");
+      setPackageBreadth(full.packageBreadth?.toString() || "");
+      setPackageHeight(full.packageHeight?.toString() || "");
+      setPackageWeight(full.packageWeight?.toString() || "");
+      setSelectedOrder(full);
+      setOrderDetail(data);
+      setIsOrderDetailsOpen(true);
+    } catch (err) {
+      console.error("Error loading order details:", err);
+    }
   };
 
   const getStatusBadgeClass = (status: string) => {
@@ -488,15 +513,15 @@ export default function OrdersManagement() {
             </DialogDescription>
           </DialogHeader>
 
-          {selectedOrder && (
+          {selectedOrder && orderDetail && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="font-heading text-sm text-muted-foreground mb-2">Customer Information</h3>
                   <div className="border rounded-md p-4">
                     <p className="font-medium">User ID: {selectedOrder.userId}</p>
-                    <p>Email: Customer Email</p>
-                    <p>Phone: Customer Phone</p>
+                    <p>Email: {orderDetail.customer_email ?? "-"}</p>
+                    <p>Phone: {orderDetail.customer_phone ?? "-"}</p>
                   </div>
                 </div>
 
@@ -512,8 +537,8 @@ export default function OrdersManagement() {
                       {selectedOrder.shippingAddress.country}
                     </p>
                     <p>Payment Method: {selectedOrder.paymentMethod}</p>
-                    <p>Payment Status: Paid</p>
-                    <p>Transaction ID: TXNID123456</p>
+                    <p>Payment Status: {selectedOrder.paymentStatus}</p>
+                    {/* Transaction ID not available */}
                   </div>
                 </div>
 
@@ -534,11 +559,11 @@ export default function OrdersManagement() {
                   <h3 className="font-heading text-sm text-muted-foreground mb-2">Billing Address</h3>
                   <div className="border rounded-md p-4">
                     <p>
-                      {selectedOrder.shippingAddress.fullName}<br/>
-                      {selectedOrder.shippingAddress.addressLine1}<br/>
-                      {selectedOrder.shippingAddress.addressLine2 && <>{selectedOrder.shippingAddress.addressLine2}<br/></>}
-                      {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.postalCode}<br/>
-                      {selectedOrder.shippingAddress.country}
+                      {selectedOrder.billingAddress.fullName}<br/>
+                      {selectedOrder.billingAddress.addressLine1}<br/>
+                      {selectedOrder.billingAddress.addressLine2 && <>{selectedOrder.billingAddress.addressLine2}<br/></>}
+                      {selectedOrder.billingAddress.city}, {selectedOrder.billingAddress.state} {selectedOrder.billingAddress.postalCode}<br/>
+                      {selectedOrder.billingAddress.country}
                     </p>
                   </div>
                 </div>
@@ -554,48 +579,47 @@ export default function OrdersManagement() {
                     </div>
 
                     <div className="space-y-2">
-                      {/* Sample order items */}
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <div className="h-10 w-10 bg-muted rounded"></div>
-                          <div>
-                            <p>Kumkumadi Face Oil</p>
-                            <p className="text-xs text-muted-foreground">Qty: 1 × ₹1,995.00</p>
+                      {selectedOrder.items.map(item => (
+                        <div key={item.id} className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            {item.productImage && <img src={item.productImage} alt={item.productName} className="h-10 w-10 object-cover rounded" />}
+                            <div>
+                              <p>{item.productName}</p>
+                              <p className="text-xs text-muted-foreground">Qty: {item.quantity} × ₹{item.productPrice.toFixed(2)}</p>
+                            </div>
                           </div>
+                          <span>₹{(item.quantity * item.productPrice).toFixed(2)}</span>
                         </div>
-                        <span>₹1,995.00</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <div className="h-10 w-10 bg-muted rounded"></div>
-                          <div>
-                            <p>Rose Jasmine Face Cleanser</p>
-                            <p className="text-xs text-muted-foreground">Qty: 1 × ₹1,250.00</p>
-                          </div>
-                        </div>
-                        <span>₹1,250.00</span>
-                      </div>
+                      ))}
                     </div>
 
-                    <div className="border-t pt-2 space-y-1">
-                      <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>₹3,245.00</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Shipping</span>
-                        <span>₹0.00</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Tax</span>
-                        <span>₹584.10</span>
-                      </div>
-                      <div className="flex justify-between font-bold">
-                        <span>Total</span>
-                        <span>₹{typeof selectedOrder.totalAmount === 'number' ? selectedOrder.totalAmount.toFixed(2) : '0.00'}</span>
-                      </div>
-                    </div>
+                    {(() => {
+                      const items = selectedOrder.items;
+                      const subtotal = items.reduce((sum, i) => sum + i.quantity * i.productPrice, 0);
+                      const shipping = selectedOrder.shippingCost ?? 0;
+                      const total = selectedOrder.totalAmount ?? 0;
+                      const tax = total - subtotal - shipping;
+                      return (
+                        <div className="border-t pt-2 space-y-1">
+                          <div className="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>₹{subtotal.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Shipping</span>
+                            <span>₹{shipping.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Tax</span>
+                            <span>₹{tax.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between font-bold">
+                            <span>Total</span>
+                            <span>₹{total.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>
