@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import OrderModel from '../models/Order';
 import OrderItemModel from '../models/OrderItem';
+import { createShipment } from '../utils/shiprocket';
 
 export async function getOrders(req: Request, res: Response) {
   try {
@@ -56,9 +57,22 @@ export async function updateOrder(req: Request, res: Response) {
     if (packageHeight !== undefined) updateData.packageHeight = packageHeight;
     if (packageWeight !== undefined) updateData.packageWeight = packageWeight;
 
-    const updatedOrder = await OrderModel.findByIdAndUpdate(id, updateData, { new: true }).lean();
+    let updatedOrder: any = await OrderModel.findByIdAndUpdate(id, updateData, { new: true }).lean();
     if (!updatedOrder) {
       return res.status(404).json({ message: 'Order not found' });
+    }
+    // Create shipment when marking as shipped
+    if (status === 'shipped') {
+      try {
+        const items = await OrderItemModel.find({ orderId: id }).lean();
+        const shipmentResp = await createShipment(updatedOrder, items);
+        if (shipmentResp.order_id) {
+          await OrderModel.findByIdAndUpdate(id, { shiprocketOrderId: shipmentResp.order_id });
+          updatedOrder.shiprocketOrderId = shipmentResp.order_id;
+        }
+      } catch (err) {
+        console.error('Error creating shipment:', err);
+      }
     }
     res.json(updatedOrder);
   } catch (error) {
