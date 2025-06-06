@@ -306,94 +306,23 @@ export default function AccountPage() {
           </TabsContent>
           
           <TabsContent value="orders" className="mt-0">
-            <div className="border border-neutral-sand rounded-md overflow-hidden">
-              <div className="bg-neutral-cream p-4 border-b border-neutral-sand">
-                <h2 className="font-heading text-lg text-primary">Your Orders</h2>
+            {ordersLoading ? (
+              <div>Loading orders...</div>
+            ) : orders.length === 0 ? (
+              <div>No orders found.</div>
+            ) : (
+              <div className="space-y-4">
+                {orders.map(order => (
+                  <div key={order.id} className="bg-white p-4 rounded shadow">
+                    <h3 className="text-lg font-semibold">Order #{order.id}</h3>
+                    <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                    <p>Status: {order.status}</p>
+                    <p>Total: ₹{order.totalAmount.toFixed(2)}</p>
+                    <Button onClick={() => navigate(`/orders/${order.id}`)}>View Details</Button>
+                  </div>
+                ))}
               </div>
-              <div className="p-6">
-                {ordersLoading ? (
-                  <div className="animate-pulse space-y-4">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="border border-neutral-sand rounded-md p-4">
-                        <div className="h-6 w-32 bg-neutral-sand mb-4"></div>
-                        <div className="grid grid-cols-4 gap-4">
-                          <div className="h-4 w-full bg-neutral-sand"></div>
-                          <div className="h-4 w-full bg-neutral-sand"></div>
-                          <div className="h-4 w-full bg-neutral-sand"></div>
-                          <div className="h-4 w-full bg-neutral-sand"></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : orders.length > 0 ? (
-                  <div className="divide-y divide-neutral-sand">
-                    {orders.map((order) => (
-                      <div key={order.id} className="py-4">
-                        <div className="flex flex-col md:flex-row justify-between mb-2">
-                          <div>
-                            <p className="font-heading text-primary">Order #{order.id}</p>
-                            <p className="text-sm text-neutral-gray">
-                              Placed on {new Date(order.createdAt).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <div>
-                            <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-                              order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                              order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
-                              order.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-neutral-100 text-neutral-800'
-                            }`}>
-                              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <p className="mb-4">
-                          <span className="font-medium">Total:</span> ₹{order.totalAmount.toFixed(2)}
-                        </p>
-                        
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-primary text-primary hover:bg-primary hover:text-white"
-                            onClick={() => navigate(`/orders/${order.id}`)}
-                          >
-                            View Details
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-neutral-gray"
-                            onClick={() => navigate(`/orders/${order.id}/track`)}
-                          >
-                            Track Order
-                          </Button>
-                          <Button
-                            asChild
-                            variant="outline"
-                            size="sm"
-                            className="border-primary text-primary hover:bg-primary hover:text-white"
-                          >
-                            <a href={`/api/orders/${order.id}/invoice`}>Download Invoice</a>
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-neutral-gray mb-4">You haven't placed any orders yet.</p>
-                    <Button 
-                      asChild
-                      className="bg-primary hover:bg-primary-light text-white"
-                    >
-                      <a href="/collections/all">Start Shopping</a>
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
+            )}
           </TabsContent>
           
           <TabsContent value="addresses" className="mt-0">

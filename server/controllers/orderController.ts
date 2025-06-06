@@ -5,6 +5,11 @@ import { createShipment } from '../utils/shiprocket';
 
 export async function getOrders(req: Request, res: Response) {
   try {
+    const userId = req.query.userId as string;
+    if (userId) {
+      const orders = await OrderModel.find({ userId }).sort({ createdAt: -1 }).lean();
+      return res.json(orders);
+    }
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
     const search = (req.query.search as string) || '';
