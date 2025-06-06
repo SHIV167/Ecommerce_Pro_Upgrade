@@ -536,8 +536,8 @@ export default function OrdersManagement() {
                       {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.postalCode}<br/>
                       {selectedOrder.shippingAddress.country}
                     </p>
-                    <p>Payment Method: {selectedOrder.paymentMethod}</p>
-                    <p>Payment Status: {selectedOrder.paymentStatus}</p>
+                    <p>Payment Method: {orderDetail.order.paymentMethod}</p>
+                    <p>Payment Status: {orderDetail.order.paymentStatus}</p>
                     {/* Transaction ID not available */}
                   </div>
                 </div>

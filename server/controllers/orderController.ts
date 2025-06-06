@@ -182,6 +182,8 @@ export async function getOrderById(req: Request, res: Response) {
     const orderResponse = {
       id: orderDoc._id,
       userId: orderDoc.userId,
+      paymentMethod: orderDoc.paymentMethod,
+      paymentStatus: orderDoc.paymentStatus,
       status: orderDoc.status,
       createdAt: orderDoc.createdAt,
       totalAmount: orderDoc.totalAmount,
