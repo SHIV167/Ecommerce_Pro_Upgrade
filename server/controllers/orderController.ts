@@ -130,13 +130,91 @@ export async function getOrderById(req: Request, res: Response) {
       orderDoc.billingPincode = orderDoc.shippingPincode;
       orderDoc.billingCountry = orderDoc.shippingCountry;
     }
+    // Fetch user details if userId exists to populate email and phone
+    let user: any = null;
+    if (orderDoc.userId) {
+      try {
+        const UserModel = (await import('../models/User')).default;
+        user = await UserModel.findById(orderDoc.userId).select('email phone').lean();
+      } catch (err) {
+        console.error('Error fetching user for order:', err);
+      }
+    }
     const items = await OrderItemModel.find({ orderId: id }).lean();
+    // Fetch product details for each item
+    const enrichedItems = await Promise.all(items.map(async item => {
+      let product: any = null;
+      try {
+        const ProductModel = (await import('../models/Product')).default;
+        product = await ProductModel.findById(item.productId).select('name price images').lean();
+      } catch (err) {
+        console.error('Error fetching product for item:', err);
+      }
+      return { 
+        ...item, 
+        id: item._id,
+        productName: product && 'name' in product ? product.name : 'Unknown Product',
+        productPrice: product && 'price' in product ? product.price : item.price,
+        productImage: product && 'images' in product && Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : ''
+      };
+    }));
     // Include id in order
-    const orderResponse = { ...orderDoc, id: orderDoc._id };
+    const orderResponse = { 
+      ...orderDoc, 
+      id: orderDoc._id,
+      customerEmail: user && 'email' in user ? user.email : 'Customer Email',
+      customerPhone: user && 'phone' in user ? user.phone : 'Customer Phone',
+      totalAmount: ('total' in orderDoc && typeof orderDoc.total === 'number' ? orderDoc.total : 0) || 
+                   (('subtotal' in orderDoc && typeof orderDoc.subtotal === 'number' ? orderDoc.subtotal : 0) + 
+                    ('tax' in orderDoc && typeof orderDoc.tax === 'number' ? orderDoc.tax : 0) + 
+                    ('shipping' in orderDoc && typeof orderDoc.shipping === 'number' ? orderDoc.shipping : 0)),
+      shippingCost: ('shipping' in orderDoc ? orderDoc.shipping : 0)
+    };
     // Add id to items
-    const itemsWithId = items.map(item => ({ ...item, id: (item._id) }));
-    // Return flat order fields with items array
-    return res.json({ ...orderResponse, items: itemsWithId });
+    const itemsWithId = enrichedItems;
+    // Embed items in the nested order object for admin UI compatibility
+    const nestedOrder = { ...orderResponse, items: itemsWithId };
+    // Destructure to exclude items from fields spread
+    const { items: _omit, ...orderFields } = nestedOrder;
+    const responseData = {
+      // Nested order now includes items
+      order: nestedOrder,
+      items: itemsWithId,
+      // Spread order fields without re-defining items
+      ...orderFields,
+      customer_email: user && 'email' in user ? user.email : 'Customer Email',
+      customer_phone: user && 'phone' in user ? user.phone : 'Customer Phone',
+      shipping_address: orderResponse.shippingAddress || '',
+      shipping_city: orderResponse.shippingCity || '',
+      shipping_state: orderResponse.shippingState || '',
+      shipping_pincode: orderResponse.shippingPincode || '',
+      shipping_country: orderResponse.shippingCountry || '',
+      billing_address: orderResponse.billingAddress || '',
+      billing_city: orderResponse.billingCity || '',
+      billing_state: orderResponse.billingState || '',
+      billing_pincode: orderResponse.billingPincode || '',
+      billing_country: orderResponse.billingCountry || '',
+      email: user && 'email' in user ? user.email : 'Customer Email',
+      phone: user && 'phone' in user ? user.phone : 'Customer Phone',
+      total: orderResponse.totalAmount,
+      amount: orderResponse.totalAmount,
+      order_total: orderResponse.totalAmount,
+      shipping: orderResponse.shippingCost,
+      shipping_amount: orderResponse.shippingCost,
+      shippingAddressFull: `${orderResponse.shippingAddress || ''}, ${orderResponse.shippingCity || ''}, ${orderResponse.shippingState || ''}, ${orderResponse.shippingPincode || ''}, ${orderResponse.shippingCountry || ''}`.trim().replace(/^,|,$/g, ''),
+      billingAddressFull: `${orderResponse.billingAddress || ''}, ${orderResponse.billingCity || ''}, ${orderResponse.billingState || ''}, ${orderResponse.billingPincode || ''}, ${orderResponse.billingCountry || ''}`.trim().replace(/^,|,$/g, ''),
+      total_amount: orderResponse.totalAmount
+    };
+    console.log('Order response sent:', {
+      orderId: id,
+      customerEmail: user && 'email' in user ? user.email : 'Customer Email',
+      customerPhone: user && 'phone' in user ? user.phone : 'Customer Phone',
+      shippingAddress: orderResponse.shippingAddress,
+      billingAddress: orderResponse.billingAddress,
+      totalAmount: orderResponse.totalAmount,
+      itemsCount: itemsWithId.length
+    });
+    return res.json(responseData);
   } catch (error) {
     console.error('Error fetching order:', error);
     return res.status(500).json({ message: 'Error fetching order' });
