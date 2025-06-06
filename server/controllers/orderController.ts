@@ -131,9 +131,11 @@ export async function getOrderById(req: Request, res: Response) {
       orderDoc.billingCountry = orderDoc.shippingCountry;
     }
     const items = await OrderItemModel.find({ orderId: id }).lean();
-    // Flatten order and include id field
+    // Include id in order
     const orderResponse = { ...orderDoc, id: orderDoc._id };
-    return res.json({ ...orderResponse, items });
+    // Add id to items
+    const itemsWithId = items.map(item => ({ ...item, id: (item._id) }));
+    return res.json({ order: orderResponse, items: itemsWithId });
   } catch (error) {
     console.error('Error fetching order:', error);
     return res.status(500).json({ message: 'Error fetching order' });
