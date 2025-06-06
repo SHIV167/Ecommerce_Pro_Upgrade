@@ -212,6 +212,8 @@ export async function createShipment(order: any, items: any[]) {
       breadth: order.packageBreadth || 10,
       height: order.packageHeight || 10,
       weight: order.packageWeight || 0.5,
+      shipping_charges: 0,
+      cod_amount: order.paymentMethod.toLowerCase() === 'cod' ? order.totalAmount : 0,
       order_items: items.map(i => ({
         name: i.name || i.productId || 'Product',
         sku: i.sku || i.productId || `SKU-${Date.now()}`,

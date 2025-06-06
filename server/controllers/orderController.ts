@@ -111,12 +111,29 @@ export async function createOrder(req: Request, res: Response) {
 export async function getOrderById(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const order = await OrderModel.findById(id).lean();
-    if (!order) {
+    const orderDoc = await OrderModel.findById(id).lean();
+    if (!orderDoc) {
       return res.status(404).json({ message: 'Order not found' });
     }
+    // Populate missing shipping fields from billing if empty, and vice versa
+    if (!orderDoc.shippingAddress) {
+      orderDoc.shippingAddress = orderDoc.billingAddress || '';
+      orderDoc.shippingCity = orderDoc.billingCity;
+      orderDoc.shippingState = orderDoc.billingState;
+      orderDoc.shippingPincode = orderDoc.billingPincode;
+      orderDoc.shippingCountry = orderDoc.billingCountry;
+    }
+    if (!orderDoc.billingAddress) {
+      orderDoc.billingAddress = orderDoc.shippingAddress;
+      orderDoc.billingCity = orderDoc.shippingCity;
+      orderDoc.billingState = orderDoc.shippingState;
+      orderDoc.billingPincode = orderDoc.shippingPincode;
+      orderDoc.billingCountry = orderDoc.shippingCountry;
+    }
     const items = await OrderItemModel.find({ orderId: id }).lean();
-    return res.json({ order, items });
+    // Flatten order and include id field
+    const orderResponse = { ...orderDoc, id: orderDoc._id };
+    return res.json({ ...orderResponse, items });
   } catch (error) {
     console.error('Error fetching order:', error);
     return res.status(500).json({ message: 'Error fetching order' });
