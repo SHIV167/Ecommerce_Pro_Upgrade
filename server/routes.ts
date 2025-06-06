@@ -32,7 +32,7 @@ import { getGiftPopupConfig, updateGiftPopupConfig, getGiftProducts } from "./co
 import { getPopupSetting, updatePopupSetting } from './controllers/popupSettingController';
 import { backupDatabase } from "./controllers/backupController";
 import { getAllUsers, updateUser, deleteUser } from './controllers/userController';
-import { getOrders, updateOrder, createOrder } from './controllers/orderController';
+import { getOrders, updateOrder, createOrder, getOrderById } from './controllers/orderController';
 import { createRazorpayOrder, verifyRazorpayPayment } from './controllers/razorpayController';
 import fs from "fs";
 import path, { dirname } from "path";
@@ -161,6 +161,7 @@ export async function registerRoutes(app: Application): Promise<Server> {
   app.use('/api', featuredProductRoutes); // Add optimized featured product routes
   // Order routes
   app.get('/api/orders', getOrders);
+  app.get('/api/orders/:id', getOrderById);
   app.post('/api/orders', createOrder);
   app.put('/api/orders/:id', updateOrder);
   // Razorpay payment endpoints
