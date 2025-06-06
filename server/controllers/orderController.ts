@@ -135,7 +135,8 @@ export async function getOrderById(req: Request, res: Response) {
     const orderResponse = { ...orderDoc, id: orderDoc._id };
     // Add id to items
     const itemsWithId = items.map(item => ({ ...item, id: (item._id) }));
-    return res.json({ order: orderResponse, items: itemsWithId });
+    // Return flat order fields with items array
+    return res.json({ ...orderResponse, items: itemsWithId });
   } catch (error) {
     console.error('Error fetching order:', error);
     return res.status(500).json({ message: 'Error fetching order' });
