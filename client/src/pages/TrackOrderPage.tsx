@@ -2,6 +2,7 @@ import { useParams } from "wouter";
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function TrackOrderPage() {
   const params = useParams();
@@ -33,7 +34,15 @@ export default function TrackOrderPage() {
   }, [orderId]);
 
   if (loading) return <div className="container mx-auto p-8">Loading...</div>;
-  if (error) return <div className="container mx-auto p-8">Error: {error}</div>;
+  if (error)
+    return (
+      <div className="container mx-auto p-8">
+        <Alert variant="destructive">
+          <AlertTitle>Tracking Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      </div>
+    );
   if (!order) return <div className="container mx-auto p-8">Order not found.</div>;
 
   return (
