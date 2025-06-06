@@ -6,14 +6,26 @@ import { Button } from "@/components/ui/button";
 export default function OrderDetailsPage() {
   const params = useParams();
   const { orderId } = params;
+
+  if (!orderId || orderId === 'undefined') {
+    return <div className="container mx-auto p-8">Invalid order ID provided.</div>;
+  }
+
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchOrder() {
-      const res = await apiRequest("GET", `/api/orders/${orderId}`);
-      setOrder(await res.json());
-      setLoading(false);
+      try {
+        const res = await apiRequest("GET", `/api/orders/${orderId}`);
+        const data = await res.json();
+        setOrder(data.order ?? data);
+      } catch (error) {
+        console.error("Error fetching order:", error);
+        setOrder(null);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchOrder();
   }, [orderId]);

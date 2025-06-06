@@ -22,17 +22,25 @@ export default function AccountPage() {
     }
   }, [authLoading, isAuthenticated, navigate]);
   
-  // --- Normalize user ID for query (MongoDB id only, since _id is not in User type) ---
+  // --- Normalize user ID & pagination state ---
   const normalizedUserId = user?.id;
-  const { data: orders = [], isLoading: ordersLoading } = useQuery<Order[]>({
-    queryKey: [`/api/orders?userId=${normalizedUserId}`],
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data = { orders: [], total: 0 }, isLoading: ordersLoading } = useQuery<{
+    orders: Order[];
+    total: number;
+  }>({
+    queryKey: [`/api/orders?userId=${normalizedUserId}&page=${page}&limit=${limit}`],
     queryFn: async () => {
-      if (!normalizedUserId) return [];
-      const res = await apiRequest('GET', `/api/orders?userId=${normalizedUserId}`);
+      if (!normalizedUserId) return { orders: [], total: 0 };
+      const res = await apiRequest(
+        'GET',
+        `/api/orders?userId=${normalizedUserId}&page=${page}&limit=${limit}`
+      );
       return res.json();
     },
     enabled: !!normalizedUserId,
-    refetchInterval: 10000, // auto-refresh orders every 10 seconds
+    refetchInterval: 10000,
   });
   
   const [editingAddress, setEditingAddress] = useState(false);
@@ -308,20 +316,42 @@ export default function AccountPage() {
           <TabsContent value="orders" className="mt-0">
             {ordersLoading ? (
               <div>Loading orders...</div>
-            ) : orders.length === 0 ? (
+            ) : data.orders.length === 0 ? (
               <div>No orders found.</div>
             ) : (
-              <div className="space-y-4">
-                {orders.map(order => (
-                  <div key={order.id} className="bg-white p-4 rounded shadow">
-                    <h3 className="text-lg font-semibold">Order #{order.id}</h3>
-                    <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                    <p>Status: {order.status}</p>
-                    <p>Total: ₹{order.totalAmount.toFixed(2)}</p>
-                    <Button onClick={() => navigate(`/orders/${order.id}`)}>View Details</Button>
-                  </div>
-                ))}
-              </div>
+              <>
+                <div className="space-y-4">
+                  {data.orders.map(order => (
+                    <div key={order.id} className="bg-white p-4 rounded shadow">
+                      <h3 className="text-lg font-semibold">Order #{order.id}</h3>
+                      <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                      <p>Status: {order.status}</p>
+                      <p>Total: ₹{order.totalAmount.toFixed(2)}</p>
+                      <Button onClick={() => navigate(`/orders/${order.id}`)}>View Details</Button>
+                    </div>
+                  ))}
+                </div>
+                {/* Pagination controls */}
+                <div className="flex justify-between items-center mt-4">
+                  <Button
+                    variant="outline"
+                    disabled={page === 1}
+                    onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                  >
+                    Previous
+                  </Button>
+                  <span>
+                    Page {page} of {Math.ceil(data.total / limit)}
+                  </span>
+                  <Button
+                    variant="outline"
+                    disabled={page >= Math.ceil(data.total / limit)}
+                    onClick={() => setPage(prev => prev + 1)}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </>
             )}
           </TabsContent>
           

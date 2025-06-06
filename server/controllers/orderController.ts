@@ -7,8 +7,17 @@ export async function getOrders(req: Request, res: Response) {
   try {
     const userId = req.query.userId as string;
     if (userId) {
-      const orders = await OrderModel.find({ userId }).sort({ createdAt: -1 }).lean();
-      return res.json(orders);
+      const page = parseInt(req.query.page as string, 10) || 1;
+      const limit = parseInt(req.query.limit as string, 10) || 10;
+      const filter = { userId };
+      const total = await OrderModel.countDocuments(filter);
+      const orderDocs = await OrderModel.find(filter)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean();
+      const orders = orderDocs.map(order => ({ ...order, id: order._id.toString() }));
+      return res.json({ orders, total });
     }
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
@@ -38,11 +47,12 @@ export async function getOrders(req: Request, res: Response) {
     }
 
     const total = await OrderModel.countDocuments(filter);
-    const orders = await OrderModel.find(filter)
+    const orderDocs = await OrderModel.find(filter)
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
+    const orders = orderDocs.map(order => ({ ...order, id: order._id.toString() }));
 
     res.json({ orders, total });
   } catch (error) {
@@ -111,25 +121,35 @@ export async function createOrder(req: Request, res: Response) {
 export async function getOrderById(req: Request, res: Response) {
   try {
     const { id } = req.params;
+    if (!id || id === 'undefined') {
+      return res.status(400).json({ message: 'Invalid order ID provided' });
+    }
     const orderDoc = await OrderModel.findById(id).lean();
     if (!orderDoc) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    // Populate missing shipping fields from billing if empty, and vice versa
-    if (!orderDoc.shippingAddress) {
-      orderDoc.shippingAddress = orderDoc.billingAddress || '';
-      orderDoc.shippingCity = orderDoc.billingCity;
-      orderDoc.shippingState = orderDoc.billingState;
-      orderDoc.shippingPincode = orderDoc.billingPincode;
-      orderDoc.shippingCountry = orderDoc.billingCountry;
-    }
-    if (!orderDoc.billingAddress) {
-      orderDoc.billingAddress = orderDoc.shippingAddress;
-      orderDoc.billingCity = orderDoc.shippingCity;
-      orderDoc.billingState = orderDoc.shippingState;
-      orderDoc.billingPincode = orderDoc.shippingPincode;
-      orderDoc.billingCountry = orderDoc.shippingCountry;
-    }
+
+    // NEW transformation: create address objects
+    const shippingAddressObj = {
+      fullName: orderDoc.shippingAddress || '',
+      addressLine1: orderDoc.shippingAddress || '',
+      addressLine2: '',
+      city: orderDoc.shippingCity || '',
+      state: orderDoc.shippingState || '',
+      postalCode: orderDoc.shippingPincode || '',
+      country: orderDoc.shippingCountry || ''
+    };
+
+    const billingAddressObj = {
+      fullName: orderDoc.billingCustomerName || '',
+      addressLine1: orderDoc.billingAddress || '',
+      addressLine2: '',
+      city: orderDoc.billingCity || '',
+      state: orderDoc.billingState || '',
+      postalCode: orderDoc.billingPincode || '',
+      country: orderDoc.billingCountry || ''
+    };
+
     // Fetch user details if userId exists to populate email and phone
     let user: any = null;
     if (orderDoc.userId) {
@@ -159,41 +179,32 @@ export async function getOrderById(req: Request, res: Response) {
       };
     }));
     // Include id in order
-    const orderResponse = { 
-      ...orderDoc, 
+    const orderResponse = {
       id: orderDoc._id,
-      customerEmail: user && 'email' in user ? user.email : 'Customer Email',
-      customerPhone: user && 'phone' in user ? user.phone : 'Customer Phone',
-      totalAmount: ('total' in orderDoc && typeof orderDoc.total === 'number' ? orderDoc.total : 0) || 
-                   (('subtotal' in orderDoc && typeof orderDoc.subtotal === 'number' ? orderDoc.subtotal : 0) + 
-                    ('tax' in orderDoc && typeof orderDoc.tax === 'number' ? orderDoc.tax : 0) + 
-                    ('shipping' in orderDoc && typeof orderDoc.shipping === 'number' ? orderDoc.shipping : 0)),
-      shippingCost: ('shipping' in orderDoc ? orderDoc.shipping : 0)
+      userId: orderDoc.userId,
+      status: orderDoc.status,
+      createdAt: orderDoc.createdAt,
+      totalAmount: orderDoc.totalAmount,
+      shippingCost: 0, // No shipping cost field; defaulting to 0
+      shippingAddress: shippingAddressObj,
+      billingAddress: billingAddressObj
     };
-    // Add id to items
-    const itemsWithId = enrichedItems;
-    // Embed items in the nested order object for admin UI compatibility
-    const nestedOrder = { ...orderResponse, items: itemsWithId };
-    // Destructure to exclude items from fields spread
-    const { items: _omit, ...orderFields } = nestedOrder;
+
     const responseData = {
-      // Nested order now includes items
-      order: nestedOrder,
-      items: itemsWithId,
-      // Spread order fields without re-defining items
-      ...orderFields,
+      order: { ...orderResponse, items: enrichedItems },
+      items: enrichedItems,
       customer_email: user && 'email' in user ? user.email : 'Customer Email',
       customer_phone: user && 'phone' in user ? user.phone : 'Customer Phone',
-      shipping_address: orderResponse.shippingAddress || '',
-      shipping_city: orderResponse.shippingCity || '',
-      shipping_state: orderResponse.shippingState || '',
-      shipping_pincode: orderResponse.shippingPincode || '',
-      shipping_country: orderResponse.shippingCountry || '',
-      billing_address: orderResponse.billingAddress || '',
-      billing_city: orderResponse.billingCity || '',
-      billing_state: orderResponse.billingState || '',
-      billing_pincode: orderResponse.billingPincode || '',
-      billing_country: orderResponse.billingCountry || '',
+      shipping_address: shippingAddressObj.addressLine1,
+      shipping_city: shippingAddressObj.city,
+      shipping_state: shippingAddressObj.state,
+      shipping_pincode: shippingAddressObj.postalCode,
+      shipping_country: shippingAddressObj.country,
+      billing_address: billingAddressObj.addressLine1,
+      billing_city: billingAddressObj.city,
+      billing_state: billingAddressObj.state,
+      billing_pincode: billingAddressObj.postalCode,
+      billing_country: billingAddressObj.country,
       email: user && 'email' in user ? user.email : 'Customer Email',
       phone: user && 'phone' in user ? user.phone : 'Customer Phone',
       total: orderResponse.totalAmount,
@@ -201,8 +212,8 @@ export async function getOrderById(req: Request, res: Response) {
       order_total: orderResponse.totalAmount,
       shipping: orderResponse.shippingCost,
       shipping_amount: orderResponse.shippingCost,
-      shippingAddressFull: `${orderResponse.shippingAddress || ''}, ${orderResponse.shippingCity || ''}, ${orderResponse.shippingState || ''}, ${orderResponse.shippingPincode || ''}, ${orderResponse.shippingCountry || ''}`.trim().replace(/^,|,$/g, ''),
-      billingAddressFull: `${orderResponse.billingAddress || ''}, ${orderResponse.billingCity || ''}, ${orderResponse.billingState || ''}, ${orderResponse.billingPincode || ''}, ${orderResponse.billingCountry || ''}`.trim().replace(/^,|,$/g, ''),
+      shippingAddressFull: `${shippingAddressObj.addressLine1 || ''}, ${shippingAddressObj.city || ''}, ${shippingAddressObj.state || ''}, ${shippingAddressObj.postalCode || ''}, ${shippingAddressObj.country || ''}`.trim().replace(/^,|,$/g, ''),
+      billingAddressFull: `${billingAddressObj.addressLine1 || ''}, ${billingAddressObj.city || ''}, ${billingAddressObj.state || ''}, ${billingAddressObj.postalCode || ''}, ${billingAddressObj.country || ''}`.trim().replace(/^,|,$/g, ''),
       total_amount: orderResponse.totalAmount
     };
     console.log('Order response sent:', {
@@ -212,7 +223,7 @@ export async function getOrderById(req: Request, res: Response) {
       shippingAddress: orderResponse.shippingAddress,
       billingAddress: orderResponse.billingAddress,
       totalAmount: orderResponse.totalAmount,
-      itemsCount: itemsWithId.length
+      itemsCount: enrichedItems.length
     });
     return res.json(responseData);
   } catch (error) {
