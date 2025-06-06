@@ -122,20 +122,20 @@ const bannerSchema = bannerObjectSchema
 const bannerUpdateSchema = bannerObjectSchema.partial();
 
 // Import routes
-import couponRoutes from './routes/couponRoutes.js';
-import giftCardRoutes from './routes/giftCardRoutes.js';
-import giftCardTemplateRoutes from './routes/giftCardTemplateRoutes.js';
-import giftPopupRoutes from './routes/giftPopupRoutes.js'; // Import gift popup routes
-import authRoutes from './routes/authRoutes.js'; // Import auth routes
-import scannerRoutes from './routes/scannerRoutes.js'; // Import scanner routes
-import testimonialRoutes from './routes/testimonialRoutes.js'; // Import testimonial routes
-import freeProductRoutes from './routes/freeProductRoutes.js'; // Import freeProduct routes
-import reviewRoutes from './routes/reviewRoutes.js'; // Import review routes
-import cartRoutes from './routes/cartRoutes.js'; // Import cart routes
+import couponRoutes from './routes/couponRoutes';
+import giftCardRoutes from './routes/giftCardRoutes';
+import giftCardTemplateRoutes from './routes/giftCardTemplateRoutes';
+import giftPopupRoutes from './routes/giftPopupRoutes'; // Import gift popup routes
+import authRoutes from './routes/authRoutes'; // Import auth routes
+import scannerRoutes from './routes/scannerRoutes'; // Import scanner routes
+import testimonialRoutes from './routes/testimonialRoutes'; // Import testimonial routes
+import freeProductRoutes from './routes/freeProductRoutes'; // Import freeProduct routes
+import reviewRoutes from './routes/reviewRoutes'; // Import review routes
+import cartRoutes from './routes/cartRoutes'; // Import cart routes
 import bannerRoutes from './routes/bannerRoutes.new'; // Add banner routes
-import categoryRoutes from './routes/categoryRoutes.js';
-import uploadRoutes from './routes/uploadRoutes.js';
-import blogRoutes from './routes/blogRoutes.js';
+import categoryRoutes from './routes/categoryRoutes';
+import uploadRoutes from './routes/uploadRoutes';
+import blogRoutes from './routes/blogRoutes';
 import featuredProductRoutes from './routes/featuredProductRoutes'; // Import optimized featured product routes
 
 // Import controllers for coupons
