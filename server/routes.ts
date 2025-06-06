@@ -168,7 +168,15 @@ export async function registerRoutes(app: Application): Promise<Server> {
   app.get('/api/orders/:id/track', async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const data = await trackShipment(id);
+      const order = await OrderModel.findById(id).lean();
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+      const shipmentId = order.shiprocketOrderId;
+      if (!shipmentId) {
+        return res.status(400).json({ message: 'No shipment ID available for this order' });
+      }
+      const data = await trackShipment(shipmentId);
       return res.json({ data });
     } catch (error) {
       return next(error);
