@@ -33,7 +33,7 @@ import { getPopupSetting, updatePopupSetting } from './controllers/popupSettingC
 import { backupDatabase } from "./controllers/backupController";
 import { getAllUsers, updateUser, deleteUser } from './controllers/userController';
 import { getOrders, updateOrder, createOrder } from './controllers/orderController';
-import { createRazorpayOrder } from './controllers/razorpayController';
+import { createRazorpayOrder, verifyRazorpayPayment } from './controllers/razorpayController';
 import fs from "fs";
 import path, { dirname } from "path";
 import multer from "multer";
@@ -163,6 +163,9 @@ export async function registerRoutes(app: Application): Promise<Server> {
   app.get('/api/orders', getOrders);
   app.post('/api/orders', createOrder);
   app.put('/api/orders/:id', updateOrder);
+  // Razorpay payment endpoints
+  app.post('/api/razorpay/order', createRazorpayOrder);
+  app.post('/api/razorpay/verify', verifyRazorpayPayment);
   app.use('/api', categoryRoutes);
   // User management routes
   app.get('/api/users', getAllUsers);
@@ -1193,9 +1196,6 @@ export async function registerRoutes(app: Application): Promise<Server> {
       return res.status(500).json({ error: "Failed to fetch product collections" });
     }
   });
-
-  // Razorpay order creation endpoint
-  app.post('/api/razorpay/order', createRazorpayOrder);
 
   // Create and return HTTP server
   return createServer(app);
