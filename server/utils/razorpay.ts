@@ -1,7 +1,6 @@
-import Razorpay from 'razorpay';
 import dotenv from 'dotenv';
-
 dotenv.config();
+import Razorpay from 'razorpay';
 
 // Validate and trim Razorpay credentials
 const key_id = process.env.RAZORPAY_KEY_ID?.trim();

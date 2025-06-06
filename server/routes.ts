@@ -171,6 +171,7 @@ export async function registerRoutes(app: Application): Promise<Server> {
   // Settings endpoints
   app.get('/api/admin/settings', getSettings);
   app.put('/api/admin/settings', updateSettings);
+  app.get('/api/config', getSettings);
   // Database backup endpoint
   app.post('/api/admin/backup', backupDatabase);
   app.use(uploadRoutes);
