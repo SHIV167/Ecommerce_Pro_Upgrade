@@ -1,15 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'wouter';
 import { Helmet } from 'react-helmet';
 import { apiRequest } from '@/lib/queryClient';
 import { formatCurrency } from '@/lib/utils';
+
+interface Address {
+  fullName: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
 
 interface Order {
   id: string;
   userId: string;
   status: string;
   totalAmount: number;
-  shippingAddress: string;
+  shippingAddress: Address;
+  billingAddress: Address;
   paymentMethod: string;
   paymentStatus: string;
   createdAt: string;
@@ -60,7 +71,13 @@ export default function ThankYouPage() {
           <h2 className="font-heading text-lg">Order Details</h2>
           <p><strong>Total:</strong> {formatCurrency(order.totalAmount)}</p>
           <p><strong>Status:</strong> {order.status}</p>
-          <p><strong>Shipping Address:</strong> {order.shippingAddress}</p>
+          <p><strong>Shipping Address:</strong></p>
+          <div className="ml-4">
+            <p>{order.shippingAddress.fullName}</p>
+            <p>{order.shippingAddress.addressLine1}</p>
+            {order.shippingAddress.addressLine2 && <p>{order.shippingAddress.addressLine2}</p>}
+            <p>{`${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.postalCode}, ${order.shippingAddress.country}`}</p>
+          </div>
         </div>
         <div className="mb-6">
           <h2 className="font-heading text-lg">Items</h2>
