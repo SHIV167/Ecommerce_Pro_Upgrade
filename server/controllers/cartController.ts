@@ -166,7 +166,9 @@ export async function getCart(req: Request, res: Response) {
       if (userId) createData.userId = userId as string;
       cart = await storage.createCart(createData);
     }
-    res.json(cart);
+    // fetch existing items to restore cart on client
+    const items = await storage.getCartItemsWithProductDetails(cart.id as string);
+    res.json({ ...cart, items });
   } catch (error) {
     console.error('Get cart error:', error);
     res.status(500).json({ message: 'Error getting cart', error: error instanceof Error ? error.message : 'Unknown error' });
