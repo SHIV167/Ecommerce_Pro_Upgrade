@@ -31,6 +31,7 @@ export default function AdminLogin() {
   const { login, isAuthenticated } = useAdminAuth();
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
   
   // If already authenticated, redirect to dashboard
   useEffect(() => {
@@ -157,7 +158,7 @@ export default function AdminLogin() {
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>
               Don't have admin credentials?{" "}
-              <a href="https://ecommercepromern.onrender.com" className="text-primary hover:underline">
+              <a href={frontendUrl} className="text-primary hover:underline">
                 Return to store
               </a>
             </p>

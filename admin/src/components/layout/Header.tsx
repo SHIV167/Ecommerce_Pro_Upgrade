@@ -13,6 +13,7 @@ import {
 export default function Header() {
   const { admin, logout } = useAdminAuth();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
   
   return (
     <header className="border-b border-border bg-card p-4 sticky top-0 z-10">
@@ -92,7 +93,7 @@ export default function Header() {
               <path d="M13 3L21 3L21 11"></path>
               <path d="M21 3L9 15"></path>
             </svg>
-            <a href="https://ecommercepromern.onrender.com/" target="_blank" rel="noopener noreferrer">
+            <a href={frontendUrl} target="_blank" rel="noopener noreferrer">
               Visit Store
             </a>
           </Button>
