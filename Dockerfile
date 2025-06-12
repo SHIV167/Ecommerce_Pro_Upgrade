@@ -27,5 +27,5 @@ RUN npm run build
 EXPOSE 5000
 
 # Start in production mode (uses tsx to run TypeScript)
-CMD ["pm2-runtime", "ecosystem.config.js"]
+CMD ["pm2-runtime", "ecosystem.config.cjs"]
 RUN mongodump --version
