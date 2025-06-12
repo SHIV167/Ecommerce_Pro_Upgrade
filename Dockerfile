@@ -17,6 +17,7 @@ WORKDIR /app
 # Copy package files and install dependencies (including dev for tsx)
 COPY package*.json ./
 RUN npm ci
+RUN npm install -g pm2
 
 # Copy all source
 COPY . .
@@ -26,5 +27,5 @@ RUN npm run build
 EXPOSE 5000
 
 # Start in production mode (uses tsx to run TypeScript)
-CMD ["npm", "run", "start"]
+CMD ["pm2-runtime", "ecosystem.config.js"]
 RUN mongodump --version
