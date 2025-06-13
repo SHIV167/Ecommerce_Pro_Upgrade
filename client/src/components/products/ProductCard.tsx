@@ -6,7 +6,7 @@ import { useCart } from "@/hooks/useCart";
 import AnimatedCartButton from "@/components/ui/AnimatedCartButton";
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { useAuth } from '@/hooks/useAuth';
 import VideoModal from "@/components/common/VideoModal";
@@ -39,6 +39,29 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
 
   const [showVideo, setShowVideo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
+  // USP slider state
+  const benefits = product.structuredBenefits || [];
+  const [currentBenefit, setCurrentBenefit] = useState(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [itemHeight, setItemHeight] = useState(0);
+  useEffect(() => {
+    if (benefits.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBenefit(i => (i + 1) % benefits.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [benefits]);
+  useEffect(() => {
+    if (sliderRef.current) setItemHeight(sliderRef.current.clientHeight);
+  }, [sliderRef.current]);
+  useEffect(() => {
+    if (benefits.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBenefit(i => (i + 1) % benefits.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [benefits]);
   // Wishlist state and handlers
   const [inWishlist, setInWishlist] = useState(false);
   useEffect(() => {
@@ -231,6 +254,20 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
         <h3 className="font-heading text-primary hover:text-primary-light mb-1 text-base text-center line-clamp-2 min-h-[3rem]">
           <Link href={`/products/${product.slug}.html`}>{product.name}</Link>
         </h3>
+        {/* USP Slider */}
+        {benefits.length > 0 && (
+          <div ref={sliderRef} className="overflow-hidden mb-1 mx-auto w-[calc(100%-8px)] lg:w-[calc(100%-16px)] h-[20px] lg:h-[32px]">
+            <div style={{ transform: `translateY(-${currentBenefit * itemHeight}px)`, transition: 'transform 0.5s ease' }}>
+              {benefits.map((b, idx) => (
+                <div key={idx} className="h-[20px] lg:h-[32px] flex items-center">
+                  <div className="inline-block rounded-full bg-gradient-to-r from-[#FFD444] to-white py-[1px] px-3">
+                    <p className="text-[12px] font-heading font-bold whitespace-nowrap">{b.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Short Description */}
         <div className="min-h-[3rem] mb-3">
           {product.shortDescription ? (
