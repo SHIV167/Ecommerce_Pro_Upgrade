@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Coupon from '../models/Coupon';
+import Order from '../models/Order';
 
 // Get all coupons
 export const getAllCoupons = async (req: Request, res: Response) => {
@@ -38,7 +39,11 @@ export const createCoupon = async (req: Request, res: Response) => {
       maxUses,
       startDate,
       endDate,
-      isActive
+      isActive,
+      isFirstTimeOffer,
+      lifetimeOrderCountThreshold,
+      lifetimeOrderStatuses,
+      combinable
     } = req.body;
 
     // Validate coupon code (unique)
@@ -74,6 +79,10 @@ export const createCoupon = async (req: Request, res: Response) => {
       startDate,
       endDate,
       isActive: isActive !== undefined ? isActive : true,
+      isFirstTimeOffer: isFirstTimeOffer !== undefined ? isFirstTimeOffer : false,
+      lifetimeOrderCountThreshold: lifetimeOrderCountThreshold ?? 0,
+      lifetimeOrderStatuses: Array.isArray(lifetimeOrderStatuses) ? lifetimeOrderStatuses : ['completed'],
+      combinable: combinable !== undefined ? combinable : true,
       usedCount: 0
     });
 
@@ -97,7 +106,11 @@ export const updateCoupon = async (req: Request, res: Response) => {
       maxUses,
       startDate,
       endDate,
-      isActive
+      isActive,
+      isFirstTimeOffer,
+      lifetimeOrderCountThreshold,
+      lifetimeOrderStatuses,
+      combinable
     } = req.body;
 
     // Check if the coupon exists
@@ -138,13 +151,17 @@ export const updateCoupon = async (req: Request, res: Response) => {
       {
         ...(code && { code: code.toUpperCase() }),
         ...(description && { description }),
-        ...(discountAmount && { discountAmount }),
+        ...(discountAmount !== undefined && { discountAmount }),
         ...(discountType && { discountType }),
         ...(minimumCartValue !== undefined && { minimumCartValue }),
         ...(maxUses !== undefined && { maxUses }),
         ...(startDate && { startDate }),
         ...(endDate && { endDate }),
-        ...(isActive !== undefined && { isActive })
+        ...(isActive !== undefined && { isActive }),
+        ...(isFirstTimeOffer !== undefined && { isFirstTimeOffer }),
+        ...(lifetimeOrderCountThreshold !== undefined && { lifetimeOrderCountThreshold }),
+        ...(lifetimeOrderStatuses !== undefined && { lifetimeOrderStatuses }),
+        ...(combinable !== undefined && { combinable })
       },
       { new: true }
     );

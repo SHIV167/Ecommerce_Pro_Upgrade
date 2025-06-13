@@ -112,7 +112,7 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
         )}
         {/* Wishlist Heart */}
         <button
-          className="absolute top-14 right-2 p-1 rounded-full hover:bg-neutral-cream transition-colors"
+          className="absolute top-2 right-2 p-1 rounded-full hover:bg-neutral-cream transition-colors"
           aria-label={inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
           onClick={toggleWishlist}
         >
@@ -129,7 +129,7 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
         {/* Video Icon - show only if videoUrl exists */}
         {product.videoUrl && (
           <button
-            className="absolute top-14 right-12 bg-white rounded-full border-2 border-green-500 p-1 z-20 shadow"
+            className="absolute top-2 right-12 bg-white rounded-full border-2 border-green-500 p-1 z-20 shadow"
             style={{ boxShadow: '0 2px 8px rgba(0,128,0,0.12)' }}
             aria-label="Play Product Video"
             onClick={e => { e.preventDefault(); setShowVideo(true); }}

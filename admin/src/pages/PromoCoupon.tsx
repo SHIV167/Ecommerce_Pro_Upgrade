@@ -267,11 +267,14 @@ export default function PromoCoupon() {
 
         <TabsContent value="list">
           <Card>
-            <CardHeader>
-              <CardTitle>All Coupons</CardTitle>
-              <CardDescription>
-                Manage your promotional coupons and discount codes.
-              </CardDescription>
+            <CardHeader className="flex justify-between items-center">
+              <div>
+                <CardTitle>All Coupons</CardTitle>
+                <CardDescription>
+                  Manage your promotional coupons and discount codes.
+                </CardDescription>
+              </div>
+              <Button onClick={() => setActiveTab('create')}>Create Coupon</Button>
             </CardHeader>
             <CardContent>
               {loading ? (
