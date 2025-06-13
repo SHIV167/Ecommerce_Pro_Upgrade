@@ -90,12 +90,12 @@ export default function SpinCampaignsManagement() {
   const { data: campaigns = [], isLoading } = useQuery<SpinCampaign[], Error>({
     queryKey: ['spinCampaignsAdmin'],
     queryFn: async () => {
-      const res = await fetch('/api/admin/spin-campaigns');
-      if (!res.ok) {
-        // return empty array on error (e.g., unauthorized)
+      try {
+        const res = await apiRequest('GET', '/api/admin/spin-campaigns');
+        return (await res.json()) as SpinCampaign[];
+      } catch (err) {
         return [];
       }
-      return res.json();
     },
   });
 
