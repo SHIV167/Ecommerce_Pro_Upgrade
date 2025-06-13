@@ -18,7 +18,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY client/package*.json ./client/
 COPY admin/package*.json ./admin/
-RUN npm ci
+RUN npm install
 RUN npm --prefix client install
 RUN npm --prefix admin install
 RUN npm install -g pm2
