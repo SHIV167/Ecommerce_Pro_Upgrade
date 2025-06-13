@@ -5,7 +5,7 @@ import SpinCampaign from '../server/models/SpinCampaign';
 dotenv.config();
 
 // Change this to your MongoDB URI if needed
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/your-db';
+const MONGO_URI = process.env.MONGODB_URI || process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/newecom';
 
 async function seed() {
   await mongoose.connect(MONGO_URI);

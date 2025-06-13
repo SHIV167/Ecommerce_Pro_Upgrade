@@ -29,13 +29,15 @@ if (!allowedOriginsEnv) {
 // Parse allowed origins from environment variable
 const allowedOrigins = allowedOriginsEnv 
   ? [...new Set(allowedOriginsEnv.split(',').map(s => s.trim()))]
-  : ['https://ecommercepromern.onrender.com'];
+  : []; // If CORS_ORIGINS not set, allow any origin by default in origin callback
 
 console.log('Allowed CORS origins:', allowedOrigins);
 
 const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Allow requests with no origin (like mobile apps or curl requests)
+      // If no specific allowed origins env, allow all origins
+      if (!allowedOriginsEnv) return callback(null, true);
     if (!origin) return callback(null, true);
     
     // Allow all origins in development

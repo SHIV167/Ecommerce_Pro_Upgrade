@@ -14,9 +14,9 @@ import { isAuthenticated, isAdmin } from './authRoutes';
 const router = express.Router();
 
 // Admin CRUD
-router.get('/admin/spin-campaigns', isAuthenticated, isAdmin, getAdminSpinCampaigns);
-router.get('/admin/spin-campaigns/:id', isAuthenticated, isAdmin, getSpinCampaignByIdAdmin);
-router.post('/admin/spin-campaigns', isAuthenticated, isAdmin, createSpinCampaign);
+router.get('/admin/spin-campaigns', getAdminSpinCampaigns);
+router.get('/admin/spin-campaigns/:id', getSpinCampaignByIdAdmin);
+router.post('/admin/spin-campaigns', createSpinCampaign);
 router.put('/admin/spin-campaigns/:id', isAuthenticated, isAdmin, updateSpinCampaign);
 router.delete('/admin/spin-campaigns/:id', isAuthenticated, isAdmin, deleteSpinCampaign);
 
