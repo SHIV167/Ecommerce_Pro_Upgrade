@@ -4,9 +4,8 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 export const API_BASE_URL = (() => {
   if (import.meta.env.DEV) return '';
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  const origin = window.location.origin;
-  if (origin.includes('-admin')) return origin.replace('-admin', '');
-  return origin;
+  // Use full admin origin for API requests to include admin cookie
+  return window.location.origin;
 })();
 
 async function throwIfResNotOk(res: Response) {
