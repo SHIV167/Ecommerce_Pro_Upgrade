@@ -81,4 +81,7 @@ router.post('/admin/auth/refresh', isAuthenticated, (req: AuthRequest, res: Resp
   }
 });
 
+// export authentication middleware
+export { isAuthenticated, isAdmin };
+
 export default router;

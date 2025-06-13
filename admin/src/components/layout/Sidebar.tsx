@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useAdminAuth } from "../../hooks/useAdminAuth";
-import { Gift, MessageSquare, Star, Tag } from "lucide-react";
+import { Gift, MessageSquare, Star, Tag, RotateCw } from "lucide-react";
 
 interface SidebarLinkProps {
   href: string;
@@ -196,6 +196,14 @@ export default function Sidebar() {
                 </svg>
               }
               label="Banners"
+              isCollapsed={isCollapsed}
+            />
+          </li>
+          <li>
+            <SidebarLink
+              href="/admin/spin-campaigns"
+              icon={<RotateCw size={20} />}
+              label="Spin Campaigns"
               isCollapsed={isCollapsed}
             />
           </li>

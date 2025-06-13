@@ -11,7 +11,8 @@
     "build": "vite build && vite build --config vite.admin.config.ts && node scripts/copy-redirects.js && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "cross-env NODE_ENV=production tsx server/index.ts",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "seed:spin": "tsx scripts/seedSpinCampaigns.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.2",

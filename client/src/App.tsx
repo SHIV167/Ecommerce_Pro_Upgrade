@@ -30,6 +30,7 @@ import StoreLocator from "./pages/StoreLocator";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import TrackingPage from "./pages/TrackingPage";
+import SpinPage from "./pages/SpinPage"; // Assuming SpinPage is located at this path
 
 export default function App() {
   const [location] = useLocation();
@@ -71,6 +72,9 @@ export default function App() {
           <Route path="/orders/:orderId" component={OrderDetailsPage} />
           <Route path="/track-order" component={TrackingPage} />
           <Route path="/orders/:orderId/track" component={TrackOrderPage} />
+          <Route path="/spin/:campaignId">
+            {({ campaignId }) => <SpinPage campaignId={campaignId} />}
+          </Route>
           <Route path="*" component={NotFoundPage} />
         </Switch>
       </main>

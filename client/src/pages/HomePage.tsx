@@ -11,7 +11,6 @@ import BrandsCarousel from "@/components/home/BrandsCarousel";
 import FeaturedProductsSection from "@/components/home/FeaturedProductsSection";
 // Try alternate import path syntax for VideoCarousel
 import VideoCarousel from "../components/home/VideoCarousel";
-import AyurvedicWisdomSection from "@/components/home/AyurvedicWisdomSection";
 import VideoGallery from "@/components/home/VideoGallery";
 import { Helmet } from 'react-helmet';
 import SearchBar from '@/components/home/SearchBar';
@@ -19,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import MobileFooterNav from '@/components/navigation/MobileFooterNav';
 import BlogSlider from '@/components/home/BlogSlider';
 import '@/styles/blog-slider.css';
+import ProductTabsSection from "@/components/home/ProductTabsSection";
 
 export default function HomePage() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -45,12 +45,11 @@ export default function HomePage() {
       <ProductCollection collectionSlug="kumkumadi" slider={true} />
       <NewLaunchSection />
       <BrandsCarousel />
-      <AyurvedicBanner />
-      <BestsellerSection />
+      {/* Product tabs replacing Wisdom section */}
+      <VideoCarousel />
+      <FeaturedProductsSection />
+      <ProductTabsSection />
       <TestimonialSection />
-      <VideoCarousel /> 
-      <AyurvedicWisdomSection />
-      <FeaturedProductsSection/>
       <SustainabilitySection />
       <VideoGallery />
       <BlogSlider />

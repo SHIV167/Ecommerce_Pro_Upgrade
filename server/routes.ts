@@ -137,6 +137,7 @@ import categoryRoutes from './routes/categoryRoutes';
 import uploadRoutes from './routes/uploadRoutes';
 import blogRoutes from './routes/blogRoutes';
 import featuredProductRoutes from './routes/featuredProductRoutes'; // Import optimized featured product routes
+import spinCampaignRoutes from './routes/spinCampaignRoutes';
 
 // Import controllers for coupons
 
@@ -159,6 +160,7 @@ export async function registerRoutes(app: Application): Promise<Server> {
   app.use('/api', reviewRoutes); // Add review routes
   app.use('/api', cartRoutes); // Add cart routes
   app.use('/api', featuredProductRoutes); // Add optimized featured product routes
+  app.use('/api', spinCampaignRoutes); // Add spin campaign routes
   // Order routes
   app.get('/api/orders', getOrders);
   app.get('/api/orders/:id', getOrderById);

@@ -30,6 +30,7 @@ import FreeProductsPage from './pages/FreeProductsPage';
 import ReviewManagement from './pages/ReviewManagement';
 import GiftPopupPage from './pages/GiftPopupPage';
 import PromoMessageManagement from './pages/PromoMessageManagement';
+import SpinCampaignsManagement from './pages/SpinCampaignsManagement';
 
 function AdminContainer() {
   const { isAuthenticated, isLoading } = useAdminAuth();
@@ -65,6 +66,7 @@ function AdminContainer() {
             <Route path="/admin/giftcard-templates" component={GiftCardTemplatesManagement} />
             <Route path="/admin/qrscanner" component={QRScannerManagement} />
             <Route path="/admin/promomessages" component={PromoMessageManagement} />
+            <Route path="/admin/spin-campaigns" component={SpinCampaignsManagement} />
             <Route path="/admin/free-products" component={FreeProductsPage} />
             <Route path="/admin/testimonials" component={TestimonialsManagement} />
             <Route path="/admin/gift-popup" component={GiftPopupPage} />
