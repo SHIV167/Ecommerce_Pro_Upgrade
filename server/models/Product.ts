@@ -24,6 +24,11 @@ export interface Benefit {
   imageUrl?: string;
 }
 
+export interface TextSliderItem {
+  text: string;
+  duration: number;
+}
+
 export interface CustomHtmlSection {
   id: string;
   title: string;
@@ -72,6 +77,7 @@ export interface IProduct extends Document {
   structuredBenefits?: Benefit[];
   customHtmlSections?: CustomHtmlSection[];
   variants?: VariantGroup[];
+  textSliderItems?: TextSliderItem[];
 }
 
 const FAQSchema = new Schema({
@@ -146,6 +152,10 @@ const ProductSchema: Schema = new Schema({
   structuredBenefits: { type: [BenefitSchema], default: [] },
   variants: { type: [VariantGroupSchema], default: [] },
   customHtmlSections: { type: [CustomHtmlSectionSchema], default: [] },
+  textSliderItems: [{
+    text: { type: String, required: true },
+    duration: { type: Number, required: true, default: 3 }
+  }]
 });
 
 export default mongoose.model<IProduct>('Product', ProductSchema);
