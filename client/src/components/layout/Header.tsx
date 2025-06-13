@@ -181,39 +181,42 @@ export default function Header() {
                 leaveTo="opacity-0 translate-y-2"
                 as="div"
               >
-                <div className="absolute right-0 mt-2 w-56 bg-white shadow-xl rounded-lg py-2 z-[100] border border-gray-100" role="menu">
-                  {!isAuthenticated && (
-                    <>
-                      <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
-                        onClick={() => { setAuthMode('login'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" /></svg>
-                        Sign in
-                      </button>
-                      <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
-                        onClick={() => { setAuthMode('register'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                        Register
-                      </button>
-                    </>
-                  )}
-                  <Link href="/cart" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007 17h10a1 1 0 00.95-.68l3.24-7.45A1 1 0 0020 7H6" /></svg>
-                    My Cart
-                  </Link>
-                  {isAuthenticated && (
-                    <Link href="/account" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" /></svg>
-                      My Account
+                <div className="relative">
+                  <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-0 w-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-red-500"></div>
+                  <div className="absolute left-0 -translate-x-1/2 mt-2 w-56 bg-white shadow-xl rounded-lg px-2 py-0 z-[9999] border border-gray-100 border-t-2 border-t-red-500" role="menu">
+                    {!isAuthenticated && (
+                      <>
+                        <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
+                          onClick={() => { setAuthMode('login'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" /></svg>
+                          Sign in
+                        </button>
+                        <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
+                          onClick={() => { setAuthMode('register'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                          Register
+                        </button>
+                      </>
+                    )}
+                    <Link href="/cart" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007 17h10a1 1 0 00.95-.68l3.24-7.45A1 1 0 0020 7H6" /></svg>
+                      My Cart
                     </Link>
-                  )}
-                  <Link href="/wishlist" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 016.364 0l1.318 1.318 1.318-1.318a4.5 4.5 0 016.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" /></svg>
-                    My Wishlist
-                  </Link>
-                  <Link href="/track-order" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3-3 3M8 9l-3 3 3 3M3 4h18M4 4v16a2 2 0 002 2h12a2 2 0 002-2V4" /></svg>
-                    Track Order
-                  </Link>
+                    {isAuthenticated && (
+                      <Link href="/account" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" /></svg>
+                        My Account
+                      </Link>
+                    )}
+                    <Link href="/wishlist" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 016.364 0l1.318 1.318 1.318-1.318a4.5 4.5 0 016.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" /></svg>
+                      My Wishlist
+                    </Link>
+                    <Link href="/track-order" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3-3 3M8 9l-3 3 3 3M3 4h18M4 4v16a2 2 0 002 2h12a2 2 0 002-2V4" /></svg>
+                      Track Order
+                    </Link>
+                  </div>
                 </div>
               </Transition>
             </div>
@@ -261,39 +264,42 @@ export default function Header() {
                 leaveTo="opacity-0 translate-y-2"
                 as="div"
               >
-                <div className="absolute right-0 mt-2 w-56 bg-white shadow-xl rounded-lg py-2 z-[100] border border-gray-100" role="menu">
-                  {!isAuthenticated && (
-                    <>
-                      <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
-                        onClick={() => { setAuthMode('login'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" /></svg>
-                        Sign in
-                      </button>
-                      <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
-                        onClick={() => { setAuthMode('register'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                        Register
-                      </button>
-                    </>
-                  )}
-                  <Link href="/cart" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007 17h10a1 1 0 00.95-.68l3.24-7.45A1 1 0 0020 7H6" /></svg>
-                    My Cart
-                  </Link>
-                  {isAuthenticated && (
-                    <Link href="/account" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" /></svg>
-                      My Account
+                <div className="relative">
+                  <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-0 w-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-red-500"></div>
+                  <div className="absolute left-0 -translate-x-1/2 mt-2 w-56 bg-white shadow-xl rounded-lg px-2 py-0 z-[9999] border border-gray-100 border-t-2 border-t-red-500" role="menu">
+                    {!isAuthenticated && (
+                      <>
+                        <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
+                          onClick={() => { setAuthMode('login'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" /></svg>
+                          Sign in
+                        </button>
+                        <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900 w-full text-left" role="menuitem"
+                          onClick={() => { setAuthMode('register'); setIsAuthModalOpen(true); setIsUserMenuOpen(false); }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                          Register
+                        </button>
+                      </>
+                    )}
+                    <Link href="/cart" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007 17h10a1 1 0 00.95-.68l3.24-7.45A1 1 0 0020 7H6" /></svg>
+                      My Cart
                     </Link>
-                  )}
-                  <Link href="/wishlist" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 016.364 0l1.318 1.318 1.318-1.318a4.5 4.5 0 016.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" /></svg>
-                    My Wishlist
-                  </Link>
-                  <Link href="/track-order" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3-3 3M8 9l-3 3 3 3M3 4h18M4 4v16a2 2 0 002 2h12a2 2 0 002-2V4" /></svg>
-                    Track Order
-                  </Link>
+                    {isAuthenticated && (
+                      <Link href="/account" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" /></svg>
+                        My Account
+                      </Link>
+                    )}
+                    <Link href="/wishlist" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 016.364 0l1.318 1.318 1.318-1.318a4.5 4.5 0 016.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" /></svg>
+                      My Wishlist
+                    </Link>
+                    <Link href="/track-order" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-900" role="menuitem">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3-3 3M8 9l-3 3 3 3M3 4h18M4 4v16a2 2 0 002 2h12a2 2 0 002-2V4" /></svg>
+                      Track Order
+                    </Link>
+                  </div>
                 </div>
               </Transition>
             </div>

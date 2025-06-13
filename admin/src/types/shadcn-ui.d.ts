@@ -54,13 +54,6 @@ declare module '@/components/ui/select' {
   export const SelectItem: FC<any>
 }
 
-declare module '@/components/ui/dropdown-menu' {
-  export const DropdownMenu: FC<any>
-  export const DropdownMenuTrigger: FC<any>
-  export const DropdownMenuContent: FC<any>
-  export const DropdownMenuItem: FC<any>
-}
-
 declare module '@/components/ui/pagination' {
   export const Pagination: FC<any>
   export const PaginationContent: FC<any>
