@@ -40,28 +40,28 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
   const [showVideo, setShowVideo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  // USP slider state
-  const benefits = product.structuredBenefits || [];
-  const [currentBenefit, setCurrentBenefit] = useState(0);
+  // Text slider state
+  const textSliderItems = product.textSliderItems || [];
+  const [currentItem, setCurrentItem] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
   const [itemHeight, setItemHeight] = useState(0);
   useEffect(() => {
-    if (benefits.length <= 1) return;
+    if (textSliderItems.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentBenefit(i => (i + 1) % benefits.length);
-    }, 3000);
+      setCurrentItem(i => (i + 1) % textSliderItems.length);
+    }, textSliderItems[currentItem]?.duration * 1000 || 3000);
     return () => clearInterval(interval);
-  }, [benefits]);
+  }, [textSliderItems, currentItem]);
   useEffect(() => {
     if (sliderRef.current) setItemHeight(sliderRef.current.clientHeight);
   }, [sliderRef.current]);
   useEffect(() => {
-    if (benefits.length <= 1) return;
+    if (textSliderItems.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentBenefit(i => (i + 1) % benefits.length);
-    }, 3000);
+      setCurrentItem(i => (i + 1) % textSliderItems.length);
+    }, textSliderItems[currentItem]?.duration * 1000 || 3000);
     return () => clearInterval(interval);
-  }, [benefits]);
+  }, [textSliderItems, currentItem]);
   // Wishlist state and handlers
   const [inWishlist, setInWishlist] = useState(false);
   useEffect(() => {
@@ -254,14 +254,14 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
         <h3 className="font-heading text-primary hover:text-primary-light mb-1 text-base text-center line-clamp-2 min-h-[3rem]">
           <Link href={`/products/${product.slug}.html`}>{product.name}</Link>
         </h3>
-        {/* USP Slider */}
-        {benefits.length > 0 && (
+        {/* Text Slider */}
+        {textSliderItems.length > 0 && (
           <div ref={sliderRef} className="overflow-hidden mb-1 mx-auto w-[calc(100%-8px)] lg:w-[calc(100%-16px)] h-[20px] lg:h-[32px]">
-            <div style={{ transform: `translateY(-${currentBenefit * itemHeight}px)`, transition: 'transform 0.5s ease' }}>
-              {benefits.map((b, idx) => (
+            <div style={{ transform: `translateY(-${currentItem * itemHeight}px)`, transition: 'transform 0.5s ease' }}>
+              {textSliderItems.map((item, idx) => (
                 <div key={idx} className="h-[20px] lg:h-[32px] flex items-center">
                   <div className="inline-block rounded-full bg-gradient-to-r from-[#FFD444] to-white py-[1px] px-3">
-                    <p className="text-[12px] font-heading font-bold whitespace-nowrap">{b.title}</p>
+                    <p className="text-[12px] font-heading font-bold whitespace-nowrap">{item.text}</p>
                   </div>
                 </div>
               ))}

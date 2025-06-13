@@ -67,6 +67,10 @@ const productSchema = z.object({
     description: z.string(),
     imageUrl: z.string().optional()
   })).default([]),
+  textSliderItems: z.array(z.object({
+    text: z.string().min(1, "Slider text is required"),
+    duration: z.number().min(1, "Duration must be at least 1 second").default(3)
+  })).default([]),
   howToUse: z.string().optional(),
   howToUseSteps: z.array(z.object({
     stepNumber: z.number().optional(),
@@ -231,6 +235,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
       structuredIngredients: product?.structuredIngredients || [],
       generalBenefits: product?.generalBenefits || '',
       structuredBenefits: product?.structuredBenefits || [],
+      textSliderItems: product?.textSliderItems || [],
       howToUse: product?.howToUse || '',
       howToUseSteps: product?.howToUseSteps || [],
       variants: product?.variants || []
@@ -250,6 +255,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
 
   const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
     name: 'structuredIngredients',
+    control: form.control
+  });
+
+  const { fields: textSliderFields, append: appendTextSliderItem, remove: removeTextSliderItem } = useFieldArray({
+    name: 'textSliderItems',
     control: form.control
   });
 
@@ -391,7 +401,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
       const productData = {
         ...values,
         customHtmlSections: formattedCustomSections, // Ensure this property is included correctly
-        variants: values.variants
+        variants: values.variants,
+        textSliderItems: values.textSliderItems
       };
 
       console.log("Sending product data:", JSON.stringify(productData));
@@ -1280,10 +1291,82 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
               </CardContent>
             </Card>
 
+            {/* Text Slider Items */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>Text Slider Items</CardTitle>
+                <CardDescription>
+                  Add multiple text items for the product's sliding text display
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {textSliderFields.map((field, index) => (
+                    <div key={field.id} className="border-b pb-4 last:border-0">
+                      <div className="flex justify-between items-center mb-2">
+                        <h3 className="text-sm font-medium">Slider Item {index + 1}</h3>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeTextSliderItem(index)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name={`textSliderItems.${index}.text`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Slider Text</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`textSliderItems.${index}.duration`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Display Duration (seconds)</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} />
+                              </FormControl>
+                              <FormDescription>
+                                How long this text should be displayed before sliding to the next item
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => appendTextSliderItem({ text: '', duration: 3 })}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Slider Item
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* How to Use Section */}
             <Card className="mt-6">
               <CardHeader>
                 <CardTitle>How to Use</CardTitle>
+                <CardDescription>
+                  Provide instructions on how to use the product
+                </CardDescription>
                 <CardDescription>Provide instructions on how to use the product</CardDescription>
               </CardHeader>
               <CardContent>

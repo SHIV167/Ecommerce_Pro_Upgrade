@@ -114,6 +114,12 @@ export const productSchema = z.object({
   // Video URL for how-to-use is defined above
   benefits: z.string().optional(), // Simple text benefits
   structuredBenefits: z.array(benefitSchema).optional().default([]), // Structured benefits
+  textSliderItems: z.array(
+    z.object({
+      text: z.string().min(1, "Slider text is required"),
+      duration: z.number().min(1, "Duration must be at least 1 second").default(3)
+    })
+  ).optional().default([]), // Text slider items for dynamic display
   customHtmlSections: z.array(customHtmlSectionSchema).optional().default([]), // Custom HTML sections
   variants: z.array(variantGroupSchema).optional().default([]), // Product variants
   minOrderValue: z.number().optional(), // For free products

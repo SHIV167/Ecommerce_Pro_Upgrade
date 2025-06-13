@@ -12,6 +12,11 @@ export interface MongoProduct extends Omit<Product, 'id'> {
     width?: number | null;
     height?: number | null;
   } | null;
+  generalBenefits?: string;
+  textSliderItems?: Array<{
+    text: string;
+    duration: number;
+  }>;
 }
 
 export interface MongoCategory extends Omit<Category, 'id'> {
