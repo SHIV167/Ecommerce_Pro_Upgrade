@@ -20,6 +20,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import RegisterPage from "./pages/RegisterPage";
 import AccountPage from "./pages/AccountPage";
+import WishlistPage from "./pages/WishlistPage";
 import Popup from "./pages/Popup";
 import ContactUsPage from "./pages/ContactUsPage";
 import BlogsPage from "./pages/BlogsPage";
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="/reset-password" component={ResetPasswordPage} />
           <Route path="/register" component={RegisterPage} />
           <Route path="/account" component={AccountPage} />
+          <Route path="/wishlist" component={WishlistPage} />
           <Route path="/popup" component={Popup} />
           <Route path="/contact" component={ContactUsPage} />
           <Route path="/blogs/:slug" component={BlogPostPage} />

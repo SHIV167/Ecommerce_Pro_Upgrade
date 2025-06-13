@@ -216,6 +216,15 @@ export const validateCoupon = async (req: Request, res: Response) => {
       });
     }
 
+    // Check first-time purchase eligibility
+    if (coupon.isFirstTimeOffer) {
+      // count past orders in allowed statuses
+      const orderCount = await Order.countDocuments({ userId: (req as any).user.id, status: { $in: coupon.lifetimeOrderStatuses } });
+      if (orderCount > coupon.lifetimeOrderCountThreshold) {
+        return res.status(400).json({ message: 'Not eligible: you have already placed orders' });
+      }
+    }
+
     // Calculate discount
     let discountValue = 0;
     if (coupon.discountType === 'percentage') {

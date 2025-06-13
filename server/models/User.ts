@@ -13,6 +13,8 @@ export interface IUser extends Document {
   state?: string;
   zipCode?: string;
   phone?: string;
+  /** Array of wishlist product IDs */
+  wishlist?: string[];
   isAdmin: boolean;
   createdAt: Date;
 }
@@ -30,6 +32,8 @@ const UserSchema: Schema = new Schema({
   state: { type: String },
   zipCode: { type: String },
   phone: { type: String },
+  /** Products added to user's wishlist */
+  wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
   isAdmin: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });

@@ -31,7 +31,7 @@ import { subscribeNewsletter, getNewsletterSubscribers } from "./controllers/new
 import { getGiftPopupConfig, updateGiftPopupConfig, getGiftProducts } from "./controllers/giftPopupController";
 import { getPopupSetting, updatePopupSetting } from './controllers/popupSettingController';
 import { backupDatabase } from "./controllers/backupController";
-import { getAllUsers, updateUser, deleteUser } from './controllers/userController';
+import { getAllUsers, updateUser, deleteUser, getWishlist, addToWishlist, removeFromWishlist } from './controllers/userController';
 import { getOrders, updateOrder, createOrder, getOrderById } from './controllers/orderController';
 import { createRazorpayOrder, verifyRazorpayPayment } from './controllers/razorpayController';
 import fs from "fs";
@@ -190,6 +190,10 @@ export async function registerRoutes(app: Application): Promise<Server> {
   app.get('/api/users', getAllUsers);
   app.put('/api/users/:id', updateUser);
   app.delete('/api/users/:id', deleteUser);
+  // Wishlist routes
+  app.get('/api/users/:id/wishlist', getWishlist);
+  app.post('/api/users/:id/wishlist', addToWishlist);
+  app.delete('/api/users/:id/wishlist/:productId', removeFromWishlist);
   // Settings endpoints
   app.get('/api/admin/settings', getSettings);
   app.put('/api/admin/settings', updateSettings);

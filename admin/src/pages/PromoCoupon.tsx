@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -61,13 +61,18 @@ interface CouponFormValues {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
+  isFirstTimeOffer: boolean;
+  lifetimeOrderCountThreshold: number;
+  lifetimeOrderStatuses: string;
+  combinable: boolean;
 }
 
-interface Coupon extends CouponFormValues {
+interface Coupon extends Omit<CouponFormValues, 'lifetimeOrderStatuses'> {
   _id: string;
   usedCount: number;
   createdAt: string;
   updatedAt: string;
+  lifetimeOrderStatuses: string[];
 }
 
 // Helper function to determine coupon status badge
@@ -119,6 +124,10 @@ export default function PromoCoupon() {
       startDate: new Date(),
       endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
       isActive: true,
+      isFirstTimeOffer: false,
+      lifetimeOrderCountThreshold: 0,
+      lifetimeOrderStatuses: 'completed',
+      combinable: true,
     },
   });
 
@@ -138,6 +147,11 @@ export default function PromoCoupon() {
         startDate: new Date(editingCoupon.startDate),
         endDate: new Date(editingCoupon.endDate),
         isActive: editingCoupon.isActive,
+        isFirstTimeOffer: editingCoupon.isFirstTimeOffer,
+        lifetimeOrderCountThreshold: editingCoupon.lifetimeOrderCountThreshold,
+        // cast to string[] to avoid contextual typing treating as string
+        lifetimeOrderStatuses: (editingCoupon.lifetimeOrderStatuses as string[]).join(','),
+        combinable: editingCoupon.combinable,
       });
       setActiveTab("create");
     }
@@ -181,14 +195,18 @@ export default function PromoCoupon() {
   };
 
   const onSubmit: SubmitHandler<CouponFormValues> = async (data) => {
+    const payload = {
+      ...data,
+      lifetimeOrderStatuses: data.lifetimeOrderStatuses.split(',').map(s => s.trim()),
+    };
     try {
       if (editingCoupon) {
         // Update existing coupon
-        await apiRequest('PUT', `/api/admin/coupons/${editingCoupon._id}`, data);
+        await apiRequest('PUT', `/api/admin/coupons/${editingCoupon._id}`, payload);
         toast.success("Coupon updated successfully");
       } else {
         // Create new coupon
-        await apiRequest('POST', '/api/admin/coupons', data);
+        await apiRequest('POST', '/api/admin/coupons', payload);
         toast.success("Coupon created successfully");
       }
       
@@ -411,21 +429,23 @@ export default function PromoCoupon() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Discount Type*</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            value={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select discount type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="percentage">Percentage (%)</SelectItem>
-                              <SelectItem value="fixed">Fixed Amount ($)</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select discount type" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="percentage">Percentage (%)</SelectItem>
+                                <SelectItem value="fixed">Fixed Amount ($)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
                           <FormDescription>
                             Percentage discounts apply a % off the total. Fixed discounts apply a specific dollar amount.
                           </FormDescription>
@@ -603,6 +623,89 @@ export default function PromoCoupon() {
                         </FormItem>
                       )}
                     />
+
+                    <FormField
+                      control={form.control}
+                      name="isFirstTimeOffer"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-md border p-4">
+                          <div className="space-y-0.5">
+                            <FormLabel className="text-base">First Time Offer</FormLabel>
+                            <FormDescription>
+                              Only valid for customers with no prior orders.
+                            </FormDescription>
+                          </div>
+                          <FormControl>
+                            <Switch checked={field.value} onCheckedChange={field.onChange}/>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {form.watch("isFirstTimeOffer") && (
+                      <>
+                        <FormField
+                          control={form.control}
+                          name="lifetimeOrderCountThreshold"
+                          rules={{ min: { value: 0, message: "Threshold cannot be negative" } }}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Order Count Threshold</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  type="number"
+                                  step="1"
+                                  min="0"
+                                  onChange={(e: ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Max prior orders allowed. 0 = no prior orders.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="lifetimeOrderStatuses"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Order Statuses</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="completed,processing" />
+                              </FormControl>
+                              <FormDescription>
+                                Comma-separated statuses to count.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="combinable"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-md border p-4">
+                              <div className="space-y-0.5">
+                                <FormLabel className="text-base">Combinable</FormLabel>
+                                <FormDescription>
+                                  Can be used with other promo offers.
+                                </FormDescription>
+                              </div>
+                              <FormControl>
+                                <Switch checked={field.value} onCheckedChange={field.onChange}/>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </>
+                    )}
                   </div>
 
                   <div className="flex justify-end space-x-4 pt-4">

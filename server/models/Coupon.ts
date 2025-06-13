@@ -11,6 +11,10 @@ export interface ICoupon extends Document {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
+  isFirstTimeOffer: boolean;
+  lifetimeOrderCountThreshold: number;
+  lifetimeOrderStatuses: string[];
+  combinable: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,6 +31,10 @@ const CouponSchema = new Schema(
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     isActive: { type: Boolean, default: true },
+    isFirstTimeOffer: { type: Boolean, default: false },
+    lifetimeOrderCountThreshold: { type: Number, default: 0 },
+    lifetimeOrderStatuses: { type: [String], default: ['completed'] },
+    combinable: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

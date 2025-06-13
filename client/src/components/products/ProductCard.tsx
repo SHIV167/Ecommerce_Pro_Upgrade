@@ -6,7 +6,9 @@ import { useCart } from "@/hooks/useCart";
 import AnimatedCartButton from "@/components/ui/AnimatedCartButton";
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import { useAuth } from '@/hooks/useAuth';
 import VideoModal from "@/components/common/VideoModal";
 
 interface ProductCardProps {
@@ -17,6 +19,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, showAddToCart = false }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
   
   const handleAddToCart = async () => {
     try {
@@ -36,6 +39,39 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
 
   const [showVideo, setShowVideo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  // Wishlist state and handlers
+  const [inWishlist, setInWishlist] = useState(false);
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      axios
+        .get(`/api/users/${user.id}/wishlist`)
+        .then(res => {
+          const ids = (res.data as any[]).map(p => p._id || p.id);
+          if (ids.includes(product._id)) setInWishlist(true);
+        })
+        .catch(() => {});
+    }
+  }, [isAuthenticated, user, product._id]);
+  const toggleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated || !user) {
+      toast({ title: 'Please login to use wishlist', variant: 'destructive' });
+      return;
+    }
+    try {
+      if (!inWishlist) {
+        await axios.post(`/api/users/${user.id}/wishlist`, { productId: product._id });
+        setInWishlist(true);
+        toast({ title: 'Added to wishlist' });
+      } else {
+        await axios.delete(`/api/users/${user.id}/wishlist/${product._id}`);
+        setInWishlist(false);
+        toast({ title: 'Removed from wishlist' });
+      }
+    } catch {
+      toast({ title: 'Wishlist update failed', variant: 'destructive' });
+    }
+  };
 
   // Helper to check if a URL is YouTube
   const isYouTubeUrl = (url?: string) => url && /youtu(be)?\.([a-z]+)/i.test(url);
@@ -74,17 +110,21 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
             Featured
           </span>
         )}
-        {/* Discount Badge */}
-        {discountPercentage && (
-          <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-sm z-20">
-            -{discountPercentage}%
-          </span>
-        )}
         {/* Wishlist Heart */}
-        <button className="absolute top-14 right-2 p-1 rounded-full hover:bg-neutral-cream transition-colors group" aria-label="Add to Wishlist">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-neutral-gray group-hover:text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
-          </svg>
+        <button
+          className="absolute top-14 right-2 p-1 rounded-full hover:bg-neutral-cream transition-colors"
+          aria-label={inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+          onClick={toggleWishlist}
+        >
+          {inWishlist ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M3.172 5.172a4 4 0 018.056 0L10 6.293l-1.228-1.121a4 4 0 10-5.6 5.6L10 18l6.228-6.228a4 4 0 00-5.6-5.6L10 6.293 11.056 5.172a4 4 0 10-7.884 0z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-neutral-gray hover:text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+            </svg>
+          )}
         </button>
         {/* Video Icon - show only if videoUrl exists */}
         {product.videoUrl && (
@@ -199,9 +239,18 @@ export default function ProductCard({ product, showAddToCart = false }: ProductC
         </div>
         {/* Price */}
         <div className="flex items-center justify-center gap-2 mb-4 min-h-[2rem]">
-          <span className="font-semibold text-lg text-primary">{formatCurrency(product.price)}</span>
-          {product.discountedPrice && (
-            <span className="text-sm text-neutral-gray line-through">{formatCurrency(product.discountedPrice)}</span>
+          {product.discountedPrice ? (
+            <>
+              <span className="font-semibold text-lg text-primary">{formatCurrency(product.discountedPrice)}</span>
+              <span className="text-sm text-neutral-gray line-through">{formatCurrency(product.price)}</span>
+              {discountPercentage && (
+                <span className="ml-2 inline-flex items-center bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-sm">
+                  -{discountPercentage}%
+                </span>
+              )}
+            </>
+          ) : (
+            <span className="font-semibold text-lg text-primary">{formatCurrency(product.price)}</span>
           )}
         </div>
         {/* Add to Bag Button */}
