@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Label } from './ui/label';
 import { CodeEditor } from './ui/code-editor';
 
@@ -124,22 +124,24 @@ export const HtmlSectionManager: React.FC<HtmlSectionManagerProps> = ({ sections
                       onClick={() => setActiveSectionId(section.id)}
                     >
                       <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={`enable-${section.id}`}
-                          checked={section.enabled}
-                          onCheckedChange={(checked) => {
-                            updateSection(section.id, { enabled: !!checked });
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <span className={`text-sm ${!section.enabled && 'text-gray-500'}`}>
-                          {section.title}
-                        </span>
-                      </div>
+                          <Checkbox
+                            id={`enable-${section.id}`}
+                            checked={section.enabled}
+                            onCheckedChange={(checked: boolean) => {
+                              updateSection(section.id, { enabled: !!checked });
+                            }}
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                              e.stopPropagation();
+                            }}
+                          />
+                          <span className={`text-sm ${!section.enabled && 'text-gray-500'}`}>
+                            {section.title}
+                          </span>
+                        </div>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                           e.stopPropagation();
                           removeSection(section.id);
                         }}
@@ -191,7 +193,7 @@ export const HtmlSectionManager: React.FC<HtmlSectionManagerProps> = ({ sections
                     <Input
                       id="section-title"
                       value={activeSection.title}
-                      onChange={(e) => updateSection(activeSection.id, { title: e.target.value })}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSection(activeSection.id, { title: e.target.value })}
                       placeholder="Section title"
                     />
                   </div>
@@ -203,7 +205,7 @@ export const HtmlSectionManager: React.FC<HtmlSectionManagerProps> = ({ sections
                       type="number"
                       min="0"
                       value={activeSection.displayOrder.toString()}
-                      onChange={(e) => updateSection(activeSection.id, { 
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSection(activeSection.id, { 
                         displayOrder: parseInt(e.target.value) || 0 
                       })}
                     />
@@ -216,7 +218,7 @@ export const HtmlSectionManager: React.FC<HtmlSectionManagerProps> = ({ sections
                     <Checkbox 
                       id={`editor-enable-${activeSection.id}`}
                       checked={activeSection.enabled}
-                      onCheckedChange={(checked) => {
+                      onCheckedChange={(checked: boolean) => {
                         updateSection(activeSection.id, { enabled: !!checked });
                       }}
                     />
