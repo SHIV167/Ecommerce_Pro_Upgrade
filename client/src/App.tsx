@@ -31,6 +31,10 @@ import OrderDetailsPage from "./pages/OrderDetailsPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import TrackingPage from "./pages/TrackingPage";
 import SpinPage from "./pages/SpinPage"; // Assuming SpinPage is located at this path
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsAndConditionsPage from "./pages/TermsAndConditionsPage";
+import DeliveryAndReturnsPage from "./pages/DeliveryAndReturnsPage";
+import AboutUsPage from "./pages/AboutUsPage";
 
 export default function App() {
   const [location] = useLocation();
@@ -75,6 +79,10 @@ export default function App() {
           <Route path="/spin/:campaignId">
             {({ campaignId }) => <SpinPage campaignId={campaignId} />}
           </Route>
+          <Route path="/privacy-policy" component={PrivacyPolicyPage} />
+          <Route path="/terms-conditions" component={TermsAndConditionsPage} />
+          <Route path="/returns-refunds" component={DeliveryAndReturnsPage} />
+          <Route path="/about-us" component={AboutUsPage} />
           <Route path="*" component={NotFoundPage} />
         </Switch>
       </main>

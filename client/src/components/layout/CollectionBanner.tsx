@@ -27,7 +27,7 @@ export default function CollectionBanner({ slug }: CollectionBannerProps) {
         <img
           src={collection.desktopImageUrl || collection.mobileImageUrl}
           alt={collection.name}
-          className="w-full object-cover"
+          className="w-full object-cover animate-zoom-out"
         />
       </picture>
     </div>
