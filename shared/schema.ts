@@ -120,6 +120,7 @@ export const productSchema = z.object({
       duration: z.number().min(1, "Duration must be at least 1 second").default(3)
     })
   ).optional().default([]), // Text slider items for dynamic display
+  tags: z.array(z.string()).optional().default([]), // Product tags for filtering
   customHtmlSections: z.array(customHtmlSectionSchema).optional().default([]), // Custom HTML sections
   variants: z.array(variantGroupSchema).optional().default([]), // Product variants
   minOrderValue: z.number().optional(), // For free products

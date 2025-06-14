@@ -13,7 +13,7 @@ export interface MongoProduct extends Omit<Product, 'id'> {
     height?: number | null;
   } | null;
   generalBenefits?: string;
-  textSliderItems?: Array<{
+  textSliderItems: Array<{
     text: string;
     duration: number;
   }>;

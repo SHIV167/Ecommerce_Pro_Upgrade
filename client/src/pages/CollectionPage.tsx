@@ -15,6 +15,7 @@ import { Helmet } from 'react-helmet';
 import CollectionBanner from '@/components/layout/CollectionBanner';
 import GreenBoxSlider from '@/components/home/GreenBoxSlider';
 import BannerLoader from '@/components/ui/BannerLoader';
+import CollectionFilter from '@/components/collections/CollectionFilter';
 
 export default function CollectionPage() {
   const { slug } = useParams();
@@ -58,14 +59,15 @@ export default function CollectionPage() {
       });
   const products = Array.isArray(productsQuery.data) ? productsQuery.data : [];
   const productsLoading = productsQuery.isLoading;
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   
   // Sort products based on selected option
-  const sortedProducts = [...products].sort((a, b) => {
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "price-low":
         return a.price - b.price;
       case "price-high":
-        return b.price - a.price;
+        return b.price - b.price;
       case "name-asc":
         return a.name.localeCompare(b.name);
       case "name-desc":
@@ -94,6 +96,11 @@ export default function CollectionPage() {
     }
     fetchPromoTimers();
   }, []);
+
+  // Reset filters when products change
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
 
   if (collectionLoading || productsQuery.isLoading) {
     return <BannerLoader />;
@@ -146,7 +153,10 @@ export default function CollectionPage() {
       
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <p className="text-neutral-gray mb-4 md:mb-0">{sortedProducts.length} products</p>
+          <div className="flex items-center gap-4">
+            <p className="text-neutral-gray">{sortedProducts.length} products</p>
+            <CollectionFilter products={products} onFilter={setFilteredProducts} />
+          </div>
           
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-[180px]">
