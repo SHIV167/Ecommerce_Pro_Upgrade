@@ -26,6 +26,7 @@ import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import '@/styles/custom-html-sections.css';
+import RecentlyViewedProducts from '@/components/RecentlyViewedProducts';
 
 // Extend Review type with server-enriched fields
 type EnrichedReview = Review & { _id?: string; userName?: string };
@@ -87,6 +88,14 @@ const ProductPage = ({ params }: RouteComponentProps<{ slug: string }>) => {
   } : null;
 
   const ExtendedReviewForm = ReviewForm as unknown as React.FC<{ productId: string; onClose: () => void; onSubmit: (review: EnrichedReview) => void; }>;
+
+  useEffect(() => {
+    if (extendedProduct?._id) {
+      const recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]') as string[];
+      const updatedViewed = [extendedProduct._id, ...recentlyViewed.filter(id => id !== extendedProduct!._id)];
+      localStorage.setItem('recentlyViewed', JSON.stringify(updatedViewed.slice(0, 10)));
+    }
+  }, [extendedProduct?._id]);
 
   useEffect(() => {
     async function fetchPromoTimers() {
@@ -542,6 +551,8 @@ const ProductPage = ({ params }: RouteComponentProps<{ slug: string }>) => {
                 )}
               </div>
             </section>
+
+            <RecentlyViewedProducts />
 
             {/* Bestsellers */}
             <section className="py-8">
